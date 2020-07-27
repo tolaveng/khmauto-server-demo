@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KHMAuto", "KHMAuto\KHMAuto.csproj", "{77FED1C7-AE8F-4F7F-9A81-42D9BAAFCA6B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{58FAAC34-890D-4B62-B1D4-38E79E55C124}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{77FED1C7-AE8F-4F7F-9A81-42D9BAAFCA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{77FED1C7-AE8F-4F7F-9A81-42D9BAAFCA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{77FED1C7-AE8F-4F7F-9A81-42D9BAAFCA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{77FED1C7-AE8F-4F7F-9A81-42D9BAAFCA6B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F72E0D4A-292F-4187-A273-EFE718CCE601}
+	EndGlobalSection
+EndGlobal
