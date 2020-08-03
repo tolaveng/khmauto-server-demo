@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class QuoteRepository : IQuote
+    public class QuoteRepository : IQuoteRepository
     {
         private readonly AppDataContext context;
         public QuoteRepository(AppDataContext context)

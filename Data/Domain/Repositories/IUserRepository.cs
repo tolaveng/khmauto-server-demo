@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface IUser
+    public interface IUserRepository
     {
 
         public Task<User> AddUser(User user);

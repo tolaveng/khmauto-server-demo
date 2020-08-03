@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface ICar
+    public interface ICarRepository
     {
         public Task<Car> GetById(long id);
         public Task<Car> GetByCarNo(string carNo);

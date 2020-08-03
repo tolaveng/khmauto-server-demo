@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface IQuote
+    public interface IQuoteRepository
     {
         public Task<Quote> GetById(long id);
         public Task<Quote> Add(Quote quote);

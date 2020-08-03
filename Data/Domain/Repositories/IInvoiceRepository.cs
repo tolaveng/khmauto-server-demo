@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface IInvoice
+    public interface IInvoiceRepository
     {
         public Task<Invoice> GetById(long id);
         public Task<Invoice> Add(Invoice invoice);

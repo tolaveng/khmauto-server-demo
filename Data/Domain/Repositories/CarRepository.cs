@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class CarRepository : ICar
+    public class CarRepository : ICarRepository
     {
         private readonly AppDataContext context;
         public CarRepository(AppDataContext context)

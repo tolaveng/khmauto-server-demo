@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface ICustomer
+    public interface ICustomerRepository
     {
         public Task<Customer> GetById(long id);
         public Task<Customer> GetByFullName(string name);

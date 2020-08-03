@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class ServiceIndexRepository : IServiceIndex
+    public class ServiceIndexRepository : IServiceIndexRepository
     {
         private readonly AppDataContext context;
         public ServiceIndexRepository(AppDataContext context)

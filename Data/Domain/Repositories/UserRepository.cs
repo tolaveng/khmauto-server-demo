@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class UserRepository : IUser
+    public class UserRepository : IUserRepository
     {
         private readonly AppDataContext context;
         public UserRepository(AppDataContext context)

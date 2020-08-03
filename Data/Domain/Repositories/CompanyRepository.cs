@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class CompanyRepository : ICompany
+    public class CompanyRepository : ICompanyRepository
     {
         private readonly AppDataContext context;
         public CompanyRepository(AppDataContext context)

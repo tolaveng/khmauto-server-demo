@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class InvoiceRepository : IInvoice
+    public class InvoiceRepository : IInvoiceRepository
     {
         private readonly AppDataContext context;
         public InvoiceRepository(AppDataContext context)

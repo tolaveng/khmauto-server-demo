@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public class CustomerRespository : ICustomer
+    public class CustomerRepository : ICustomerRepository
     {
         private readonly AppDataContext context;
-        public CustomerRespository(AppDataContext context)
+        public CustomerRepository(AppDataContext context)
         {
             this.context = context;
         }

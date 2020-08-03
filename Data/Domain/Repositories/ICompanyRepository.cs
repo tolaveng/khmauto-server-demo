@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface ICompany
+    public interface ICompanyRepository
     {
         public Task<Company> GetById(int id);
         public Task<Company> Update(Company company);

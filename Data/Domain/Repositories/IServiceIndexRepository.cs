@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
 {
-    public interface IServiceIndex
+    public interface IServiceIndexRepository
     {
         public Task<ServiceIndex> GetService(string serviceName);
         public Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName);
