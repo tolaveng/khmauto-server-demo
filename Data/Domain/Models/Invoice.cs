@@ -22,6 +22,8 @@ namespace Data.Domain.Models
 
         public User User { get; set; }
 
+        public Boolean Archived { get; set; }
+
         // Service
         public ICollection<Service> Services { get; set; }
 

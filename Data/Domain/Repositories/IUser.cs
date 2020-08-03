@@ -1,0 +1,17 @@
+﻿using Data.Domain.Models;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Data.Domain.Repositories
+{
+    public interface IUser
+    {
+
+        public Task<User> AddUser(User user);
+        public Task<User> GetById(int userId);
+        public Task<User> GetByUsername(string userName);
+        public Task UpdateUser(User user);
+    }
+}

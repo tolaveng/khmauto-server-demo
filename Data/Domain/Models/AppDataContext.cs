@@ -20,6 +20,8 @@ namespace Data.Domain.Models
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
+        public DbSet<ServiceIndex> ServiceIndexs { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +56,9 @@ namespace Data.Domain.Models
             modelBuilder.Entity<Quote>()
                 .HasOne(z => z.User)
                 .WithMany(z => z.Quotes);
+
+            modelBuilder.Entity<ServiceIndex>()
+                .HasKey(z => z.ServiceName);
         }
 
     }
