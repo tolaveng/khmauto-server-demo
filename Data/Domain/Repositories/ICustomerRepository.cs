@@ -8,6 +8,7 @@ namespace Data.Domain.Repositories
 {
     public interface ICustomerRepository
     {
+        public Task<IEnumerable<Customer>> GetAll();
         public Task<Customer> GetById(long id);
         public Task<Customer> GetByFullName(string name);
         public Task<Customer> GetByPhone(string phone);

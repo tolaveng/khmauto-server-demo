@@ -1,4 +1,5 @@
-﻿using Data.Domain.Models;
+﻿using Data.Domain.Common;
+using Data.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -9,7 +10,7 @@ namespace Data.Domain.Repositories
     public interface ICarRepository
     {
         public Task<IEnumerable<Car>> GetAll();
-        public Task<IEnumerable<Car>> FindByCarNo(string carNo);
+        public Task<IEnumerable<Car>> GetAllByCarNo(string carNo, PaginationFilter pagination);
         public Task<Car> GetById(long id);
         public Task<Car> GetByCarNo(string carNo);
         public Task<Car> Add(Car car);

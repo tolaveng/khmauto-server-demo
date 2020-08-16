@@ -1,4 +1,5 @@
-﻿using Data.Domain.Models;
+﻿using Data.Domain.Common;
+using Data.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -55,9 +56,13 @@ namespace Data.Domain.Repositories
             return await context.Cars.ToListAsync();
         }
 
-        public async Task<IEnumerable<Car>> FindByCarNo(string carNo)
+        public async Task<IEnumerable<Car>> GetAllByCarNo(string carNo, PaginationFilter pagination)
         {
-            return await context.Cars.Where(z => z.CarNo.ToUpper().Contains(carNo.Trim().ToUpper())).ToListAsync();
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+
+            return await context.Cars.Where(z => z.CarNo.ToUpper().Contains(carNo.Trim().ToUpper()))
+                .Skip(skip).Take(pagination.PageSize)
+                .ToListAsync();
         }
 
         public async Task<long> GetCount()

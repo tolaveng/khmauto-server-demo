@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Data.Api.Common;
+using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.DTO;
 using System;
@@ -27,6 +29,8 @@ namespace Data.Mapper
                 cfg.CreateMap<ServiceIndex, ServiceIndexDto>();
                 
                 cfg.CreateMap<User, UserDto>();
+
+                cfg.CreateMap<PaginationQuery, PaginationFilter>();
             });
 
             return config.CreateMapper();

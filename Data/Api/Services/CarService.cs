@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Data.Api.Common;
+using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
@@ -32,7 +34,7 @@ namespace Data.Services
             await _repository.Delete(id);
         }
 
-        public async Task<List<CarDto>> GetAll()
+        public async Task<IEnumerable<CarDto>> GetAll()
         {
             var cars = await _repository.GetAll();
             return _mapper.Map<List<CarDto>>(cars);
@@ -48,6 +50,16 @@ namespace Data.Services
         {
             var car = await _repository.GetByCarNo(carNo);
             return _mapper.Map<CarDto>(car);
+        }
+
+        public async Task<PagedResponse<CarDto>> GetAllByCarNo(string carNo, PaginationQuery pagination)
+        {
+            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
+            var cars = await _repository.GetAllByCarNo(carNo, paginationFilter);
+            var totalCount = await _repository.GetCount();
+            var data = _mapper.Map<List<CarDto>>(cars);
+
+            return new PagedResponse<CarDto>(data, totalCount, pagination);
         }
     }
 }

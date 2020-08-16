@@ -36,7 +36,9 @@ namespace Data.Domain.Repositories
 
         public async Task<Invoice> GetById(long id)
         {
-            return await context.Invoices.SingleOrDefaultAsync(z => z.Id == id);
+            return await context.Invoices
+                .Include(z => z.Services)
+                .SingleOrDefaultAsync(z => z.Id == id);
         }
 
         public async Task<Invoice> Update(Invoice invoice)

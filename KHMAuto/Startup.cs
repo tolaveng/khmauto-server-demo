@@ -42,6 +42,8 @@ namespace KHMAuto
             services.AddTransient<IServiceRepository, ServiceRepository>();
             services.AddTransient<IServiceIndexRepository, ServiceIndexRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

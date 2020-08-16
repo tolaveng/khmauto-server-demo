@@ -32,6 +32,11 @@ namespace Data.Domain.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<Customer>> GetAll()
+        {
+            return await context.Customers.ToListAsync();
+        }
+
         public async Task<Customer> GetByEmail(string email)
         {
             return await context.Customers.FirstOrDefaultAsync(z => z.Email.Trim().Equals(email.Trim(), StringComparison.OrdinalIgnoreCase));

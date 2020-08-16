@@ -1,4 +1,5 @@
-﻿using Data.DTO;
+﻿using Data.Api.Common;
+using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,11 +9,11 @@ namespace Data.Services
 {
     public interface ICarService
     {
-        Task<List<CarDto>> GetAll();
+        Task<IEnumerable<CarDto>> GetAll();
+        Task<PagedResponse<CarDto>> GetAllByCarNo(string carNo, PaginationQuery pagination);
         Task<CarDto> GetById(long id);
         Task<CarDto> GetByCarNo(string carNo);
         Task Add(CarDto car);
         Task Delete(long id);
-
     }
 }
