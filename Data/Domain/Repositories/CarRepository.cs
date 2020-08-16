@@ -49,5 +49,20 @@ namespace Data.Domain.Repositories
             await context.SaveChangesAsync();
             return car;
         }
+
+        public async Task<IEnumerable<Car>> GetAll()
+        {
+            return await context.Cars.ToListAsync();
+        }
+
+        public async Task<IEnumerable<Car>> FindByCarNo(string carNo)
+        {
+            return await context.Cars.Where(z => z.CarNo.ToUpper().Contains(carNo.Trim().ToUpper())).ToListAsync();
+        }
+
+        public async Task<long> GetCount()
+        {
+            return await context.Cars.CountAsync();
+        }
     }
 }

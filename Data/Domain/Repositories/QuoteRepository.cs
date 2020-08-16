@@ -39,6 +39,11 @@ namespace Data.Domain.Repositories
             return await context.Quotes.SingleOrDefaultAsync(z => z.Id == id);
         }
 
+        public async Task<long> GetCount()
+        {
+            return await context.Quotes.CountAsync();
+        }
+
         public async Task<Quote> Update(Quote quote)
         {
             var change = context.Quotes.Attach(quote);

@@ -12,5 +12,6 @@ namespace Data.Domain.Repositories
         public Task<Quote> Add(Quote quote);
         public Task<Quote> Update(Quote quote);
         public Task<bool> Delete(long id);
+        public Task<long> GetCount();
     }
 }

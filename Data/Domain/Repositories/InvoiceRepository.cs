@@ -46,5 +46,10 @@ namespace Data.Domain.Repositories
             await context.SaveChangesAsync();
             return invoice;
         }
+
+        public async Task<long> GetCount()
+        {
+            return await context.Invoices.CountAsync();
+        }
     }
 }

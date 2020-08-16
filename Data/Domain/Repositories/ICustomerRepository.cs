@@ -15,5 +15,6 @@ namespace Data.Domain.Repositories
         public Task<Customer> Add(Customer customer);
         public Task<Customer> Update(Customer customer);
         public Task<bool> Delete(long id);
+        public Task<long> GetCount();
     }
 }

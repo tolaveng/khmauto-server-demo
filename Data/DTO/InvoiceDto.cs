@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Data.Domain.Models
+namespace Data.DTO
 {
-    public class Invoice
+    public class InvoiceDto
     {
         public long Id { get; set; }
         public DateTime InvoiceDateTime { get; set; }
@@ -17,19 +17,15 @@ namespace Data.Domain.Models
         public string Note { get; set; }
         public string ODO { get; set; }
 
-        public Car Car { get; set; }
+        public CarDto Car { get; set; }
 
-        public Customer Customer { get; set; }
+        public CustomerDto Customer { get; set; }
 
-        public User User { get; set; }
+        public UserDto User { get; set; }
 
         public Boolean Archived { get; set; }
 
-        public ICollection<Service> Services { get; set; }
-
-        protected Invoice()
-        {
-
-        }
+        // Service
+        public ICollection<ServiceDto> Services { get; set; }
     }
 }

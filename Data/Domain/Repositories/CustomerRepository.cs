@@ -52,6 +52,11 @@ namespace Data.Domain.Repositories
             return await context.Customers.FirstOrDefaultAsync(z => z.Phone.Trim().Equals(phone.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
+        public async Task<long> GetCount()
+        {
+            return await context.Customers.CountAsync();
+        }
+
         public async Task<Customer> Update(Customer customer)
         {
             var change = context.Customers.Attach(customer);
