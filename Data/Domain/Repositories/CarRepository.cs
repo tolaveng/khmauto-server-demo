@@ -51,12 +51,13 @@ namespace Data.Domain.Repositories
             return car;
         }
 
-        public async Task<IEnumerable<Car>> GetAll()
+        public async Task<IEnumerable<Car>> GetAllPaged(PaginationFilter pagination)
         {
-            return await context.Cars.ToListAsync();
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await context.Cars.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
-        public async Task<IEnumerable<Car>> GetAllByCarNo(string carNo, PaginationFilter pagination)
+        public async Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationFilter pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
 

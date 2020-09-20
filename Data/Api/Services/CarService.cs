@@ -4,9 +4,7 @@ using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Services
@@ -34,10 +32,13 @@ namespace Data.Services
             await _repository.Delete(id);
         }
 
-        public async Task<IEnumerable<CarDto>> GetAll()
+        public async Task<PagedResponse<CarDto>> GetAllPaged(PaginationQuery pagination)
         {
-            var cars = await _repository.GetAll();
-            return _mapper.Map<List<CarDto>>(cars);
+            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
+            var totalCount = await _repository.GetCount();
+            var cars = await _repository.GetAllPaged(paginationFilter);
+            var data = _mapper.Map<List<CarDto>>(cars);
+            return new PagedResponse<CarDto>(data, totalCount, pagination);
         }
 
         public async Task<CarDto> GetById(long id)
@@ -52,10 +53,10 @@ namespace Data.Services
             return _mapper.Map<CarDto>(car);
         }
 
-        public async Task<PagedResponse<CarDto>> GetAllByCarNo(string carNo, PaginationQuery pagination)
+        public async Task<PagedResponse<CarDto>> FindByCarNoPaged(string carNo, PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
-            var cars = await _repository.GetAllByCarNo(carNo, paginationFilter);
+            var cars = await _repository.FindByCarNoPaged(carNo, paginationFilter);
             var totalCount = await _repository.GetCount();
             var data = _mapper.Map<List<CarDto>>(cars);
 

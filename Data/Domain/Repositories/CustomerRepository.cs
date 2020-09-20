@@ -1,4 +1,5 @@
-﻿using Data.Domain.Models;
+﻿using Data.Domain.Common;
+using Data.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -32,9 +33,10 @@ namespace Data.Domain.Repositories
             return true;
         }
 
-        public async Task<IEnumerable<Customer>> GetAll()
+        public async Task<IEnumerable<Customer>> GetAllPaged(PaginationFilter pagination)
         {
-            return await context.Customers.ToListAsync();
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await context.Customers.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
         public async Task<Customer> GetByEmail(string email)

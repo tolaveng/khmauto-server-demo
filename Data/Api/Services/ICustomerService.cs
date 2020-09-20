@@ -1,4 +1,5 @@
-﻿using Data.DTO;
+﻿using Data.Api.Common;
+using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Data.Services
 {
     public interface ICustomerService
     {
-        Task<IEnumerable<CustomerDto>> GetAll();
+        Task<PagedResponse<CustomerDto>> GetAllPaged(PaginationQuery pagination);
         Task<CustomerDto> GetById(long id);
         Task<CustomerDto> GetByPhoneNo(string phoneNo);
         Task<CustomerDto> GetByName(string name);

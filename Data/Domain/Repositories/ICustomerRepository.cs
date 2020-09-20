@@ -1,4 +1,5 @@
-﻿using Data.Domain.Models;
+﻿using Data.Domain.Common;
+using Data.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,7 +9,7 @@ namespace Data.Domain.Repositories
 {
     public interface ICustomerRepository
     {
-        public Task<IEnumerable<Customer>> GetAll();
+        public Task<IEnumerable<Customer>> GetAllPaged(PaginationFilter pagination);
         public Task<Customer> GetById(long id);
         public Task<Customer> GetByFullName(string name);
         public Task<Customer> GetByPhone(string phone);
