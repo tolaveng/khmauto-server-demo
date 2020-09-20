@@ -62,5 +62,11 @@ namespace Data.Services
 
             return new PagedResponse<CarDto>(data, totalCount, pagination);
         }
+
+        public async Task Update(CarDto car)
+        {
+            var update = _mapper.Map<Car>(car);
+            await _repository.Update(update);
+        }
     }
 }

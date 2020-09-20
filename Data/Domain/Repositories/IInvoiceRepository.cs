@@ -13,5 +13,6 @@ namespace Data.Domain.Repositories
         public Task<Invoice> Update(Invoice invoice);
         public Task<bool> Archive(long id);
         public Task<long> GetCount();
+        public Task<IEnumerable<Invoice>> GetByCarId(long carId);
     }
 }

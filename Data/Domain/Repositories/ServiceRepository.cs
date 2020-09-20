@@ -37,6 +37,11 @@ namespace Data.Domain.Repositories
             return await context.Services.SingleOrDefaultAsync(z => z.Id == id);
         }
 
+        public async Task<IEnumerable<Service>> GetByInvoiceId(long invoiceId)
+        {
+            return await context.Services.Where(z => z.InvoiceId == invoiceId).ToListAsync();
+        }
+
         public async Task<Service> GetByName(string name)
         {
             return await context.Services.FirstOrDefaultAsync(z => z.ServiceName.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));

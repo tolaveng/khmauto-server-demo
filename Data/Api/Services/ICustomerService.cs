@@ -15,5 +15,6 @@ namespace Data.Services
         Task<CustomerDto> GetByName(string name);
         Task Add(CustomerDto customer);
         Task Delete(long id);
+        Task Update(CustomerDto customer);
     }
 }

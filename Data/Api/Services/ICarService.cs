@@ -15,5 +15,6 @@ namespace Data.Services
         Task<CarDto> GetByCarNo(string carNo);
         Task Add(CarDto car);
         Task Delete(long id);
+        Task Update(CarDto car);
     }
 }

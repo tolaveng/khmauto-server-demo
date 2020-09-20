@@ -8,6 +8,7 @@ namespace Data.Domain.Repositories
 {
     public interface IServiceRepository
     {
+        public Task<IEnumerable<Service>> GetByInvoiceId(long invoiceId);
         public Task<Service> GetById(long id);
         public Task<Service> GetByName(string name);
         public Task<Service> Add(Service service);

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -52,6 +53,11 @@ namespace Data.Domain.Repositories
         public async Task<long> GetCount()
         {
             return await context.Invoices.CountAsync();
+        }
+
+        public async Task<IEnumerable<Invoice>> GetByCarId(long carId)
+        {
+            return await context.Invoices.Where(z => z.Car.Id == carId).ToListAsync();
         }
     }
 }

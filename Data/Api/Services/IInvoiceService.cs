@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Data.Api.Services
 {
-    interface IInvoiceService
+    public interface IInvoiceService
     {
     }
 }

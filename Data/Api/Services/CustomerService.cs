@@ -60,5 +60,11 @@ namespace Data.Services
             var customer = await _repository.GetByFullName(name);
             return _mapper.Map<CustomerDto>(customer);
         }
+
+        public async Task Update(CustomerDto customer)
+        {
+            var update = _mapper.Map<Customer>(customer);
+            await _repository.Update(update);
+        }
     }
 }
