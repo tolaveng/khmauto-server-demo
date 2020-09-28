@@ -12,12 +12,17 @@ namespace Data.Api.Services
     public class ServiceService : IServiceService
     {
         private readonly IServiceRepository _repository;
+        private readonly IServiceIndexRepository _serviceIndexrepository;
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IMapper _mapper;
 
-        public ServiceService(IServiceRepository repository, IInvoiceRepository invoiceRepository, IMapper mapper)
+        public ServiceService(IServiceRepository repository,
+            IServiceIndexRepository serviceIndexRespository,
+            IInvoiceRepository invoiceRepository,
+            IMapper mapper)
         {
             _repository = repository;
+            _serviceIndexrepository = serviceIndexRespository;
             _invoiceRepository = invoiceRepository;
             _mapper = mapper;
 
@@ -26,6 +31,9 @@ namespace Data.Api.Services
         {
             var insert = _mapper.Map<Service>(service);
             await _repository.Add(insert);
+            // quick search for service name
+            await _serviceIndexrepository.AddOrUpdateService(service.ServiceName, service.ServicePrice);
+
         }
 
         public async Task<bool> Delete(long id)
