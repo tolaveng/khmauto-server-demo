@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Api.Services;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
+using Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -34,14 +36,24 @@ namespace KHMAuto
             options.UseNpgsql(Configuration.GetConnectionString("PostgresDatabase")));
 
             // Add Repositories
-            services.AddTransient<ICarRepository, CarRepository>();
-            services.AddTransient<ICompanyRepository, CompanyRepository>();
-            services.AddTransient<ICustomerRepository, CustomerRepository>();
-            services.AddTransient<IInvoiceRepository, InvoiceRepository>();
-            services.AddTransient<IQuoteRepository, QuoteRepository>();
-            services.AddTransient<IServiceRepository, ServiceRepository>();
-            services.AddTransient<IServiceIndexRepository, ServiceIndexRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddScoped<ICarRepository, CarRepository>();
+            services.AddScoped<ICompanyRepository, CompanyRepository>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            services.AddScoped<IQuoteRepository, QuoteRepository>();
+            services.AddScoped<IServiceRepository, ServiceRepository>();
+            services.AddScoped<IServiceIndexRepository, ServiceIndexRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            // Add Services
+            services.AddScoped<ICarService, CarService>();
+            services.AddScoped<ICompanyService, CompanyService>();
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<IInvoiceService, InvoiceService>();
+            services.AddScoped<IQuoteService, QuoteService>();
+            services.AddScoped<IServiceService, ServiceService>();
+            services.AddScoped<IServiceIndexService, ServiceIndexService>();
+            services.AddScoped<IUserService, UserService>();
 
 
         }

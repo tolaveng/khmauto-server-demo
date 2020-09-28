@@ -36,7 +36,7 @@ namespace Data.Domain.Repositories
 
         public async Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName)
         {
-            return await context.ServiceIndexs.Where(z => z.ServiceName.Contains(serviceName.Trim())).ToListAsync();
+            return await context.ServiceIndexs.Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase)).ToListAsync();
         }
 
         public async Task<ServiceIndex> GetService(string serviceName)
