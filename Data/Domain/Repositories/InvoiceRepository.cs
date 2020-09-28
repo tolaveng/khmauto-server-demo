@@ -1,4 +1,6 @@
-﻿using Data.Domain.Models;
+﻿using Data.Api.Common;
+using Data.Domain.Common;
+using Data.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -58,6 +60,37 @@ namespace Data.Domain.Repositories
         public async Task<IEnumerable<Invoice>> GetByCarId(long carId)
         {
             return await context.Invoices.Where(z => z.Car.Id == carId).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Invoice>> GetAllPaged(PaginationFilter pagination)
+        {
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await context.Invoices.Where(z => !z.Archived).OrderByDescending(z => z.Id)
+                .Skip(skip).Take(pagination.PageSize).ToListAsync();
+        }
+
+        public async Task<IEnumerable<Invoice>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
+        {
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await context.Invoices.Where(z => !z.Archived &&
+                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.CarNo.Contains(query.PlateNo)) &&
+                (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+            )
+                .OrderByDescending(z => z.Id)
+                .Skip(skip).Take(pagination.PageSize).ToListAsync();
+        }
+
+        
+        public async Task<long> GetCountByQuery(InvoiceQuery query)
+        {
+            return await context.Invoices.Where(z => !z.Archived &&
+                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.CarNo.Contains(query.PlateNo)) &&
+                (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+            ).CountAsync();
         }
     }
 }
