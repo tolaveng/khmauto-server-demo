@@ -11,6 +11,6 @@ namespace Data.DTO
         public string Password { get; set; }
         public string FullName { get; set; }
         public bool isAdmin { get; set; }
-        protected UserDto() { }
+        public UserDto() { }
     }
 }

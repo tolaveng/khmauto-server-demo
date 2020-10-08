@@ -64,5 +64,24 @@ namespace Data.Api.Services
             await _repository.UpdateUser(updateUser);
         }
 
+        public async Task<UserDto> FindByUsername(string username)
+        {
+            var user = await _repository.GetByUsername(username);
+            if (user == null) return null;
+            return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task<IEnumerable<UserDto>> GetAll()
+        {
+            var users = await _repository.GetAll();
+            return _mapper.Map<IEnumerable<UserDto>>(users);
+        }
+
+        public async Task<UserDto> GetById(int id)
+        {
+            var user = await _repository.GetById(id);
+            if (user == null) return null;
+            return _mapper.Map<UserDto>(user);
+        }
     }
 }

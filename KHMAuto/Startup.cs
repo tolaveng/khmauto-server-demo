@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Data.Api.Services;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
+using Data.Mapper;
 using Data.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +36,8 @@ namespace KHMAuto
 
             services.AddDbContextPool<AppDataContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("PostgresDatabase")));
+
+            services.AddAutoMapper(typeof(AutoMapperProfile));
 
             // Add Repositories
             services.AddScoped<ICarRepository, CarRepository>();
@@ -66,7 +70,7 @@ namespace KHMAuto
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

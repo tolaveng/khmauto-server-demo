@@ -22,6 +22,11 @@ namespace Data.Domain.Repositories
             return user;
         }
 
+        public async Task<IEnumerable<User>> GetAll()
+        {
+            return await context.Users.ToListAsync();
+        }
+
         public async Task<User> GetById(int userId)
         {
             return await context.Users.FirstOrDefaultAsync(z => z.UserId == userId);
