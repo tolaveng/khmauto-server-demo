@@ -8,5 +8,7 @@ namespace Data.DTO
     {
         public string ServiceName { get; set; }
         public Decimal ServicePrice { get; set; }
+
+        public ServiceIndexDto() { }
     }
 }

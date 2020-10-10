@@ -17,6 +17,6 @@ namespace Data.DTO
         public ICollection<InvoiceDto> Invoices { get; set; }
         public ICollection<QuoteDto> Quotes { get; set; }
 
-        protected CustomerDto() { }
+        public CustomerDto() { }
     }
 }

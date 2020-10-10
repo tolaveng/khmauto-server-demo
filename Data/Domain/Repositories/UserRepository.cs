@@ -34,7 +34,7 @@ namespace Data.Domain.Repositories
 
         public async Task<User> GetByUsername(string userName)
         {
-            return await context.Users.LastOrDefaultAsync(z => z.Username.Equals(userName));
+            return await context.Users.FirstOrDefaultAsync(z => z.Username.Equals(userName));
         }
 
         public async Task UpdateUser(User user)

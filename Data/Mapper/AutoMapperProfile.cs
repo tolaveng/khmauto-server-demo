@@ -25,6 +25,7 @@ namespace Data.Mapper
             CreateMap<Quote, QuoteDto>();
 
             // Dto
+            CreateMap<CompanyDto, Company>();
             CreateMap<UserDto, User>();
 
             // Others

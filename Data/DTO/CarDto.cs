@@ -14,6 +14,6 @@ namespace Data.DTO
 
         public string ODO { get; set; }
 
-        protected CarDto() { }
+        public CarDto() { }
     }
 }

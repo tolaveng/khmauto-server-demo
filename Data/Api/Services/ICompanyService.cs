@@ -8,6 +8,8 @@ namespace Data.Api.Services
 {
     public interface ICompanyService
     {
+        Task<CompanyDto> Get();
         Task UpdateCompany(CompanyDto company);
+        Task CreateCompany(CompanyDto company);
     }
 }

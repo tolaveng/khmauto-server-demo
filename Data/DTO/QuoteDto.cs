@@ -21,7 +21,7 @@ namespace Data.DTO
 
         // Service
         public ICollection<ServiceDto> Services { get; set; }
-        protected QuoteDto() { 
+        public QuoteDto() { 
         }
     }
 }

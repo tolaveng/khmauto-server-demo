@@ -17,6 +17,6 @@ namespace Data.DTO
         public long QuoteId { get; set; }
         public QuoteDto Quote { get; set; }
 
-        protected ServiceDto() { }
+        public ServiceDto() { }
     }
 }

@@ -8,7 +8,9 @@ namespace Data.Domain.Repositories
 {
     public interface ICompanyRepository
     {
+        public Task<IEnumerable<Company>> GetAll();
         public Task<Company> GetById(int id);
-        public Task<Company> Update(Company company);
+        public Task Update(Company company);
+        public Task Add(Company company);
     }
 }

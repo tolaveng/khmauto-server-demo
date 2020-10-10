@@ -19,6 +19,6 @@ namespace Data.DTO
         public string BankAccountName { get; set; }
         public string BankAccountNumber { get; set; }
 
-        protected CompanyDto() { }
+        public CompanyDto() { }
     }
 }

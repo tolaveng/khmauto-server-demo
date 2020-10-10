@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,17 +16,28 @@ namespace Data.Domain.Repositories
             this.context = context;
         }
 
-        public async Task<Company> GetById(int id)
+        public async Task Add(Company company)
         {
-            return await context.Companies.FindAsync(id);
+            await context.Companies.AddAsync(company);
+            await context.SaveChangesAsync();
         }
 
-        public async Task<Company> Update(Company company)
+        public async Task<Company> GetById(int id)
+        {
+            return await context.Companies.SingleOrDefaultAsync( z => z.Id == id);
+        }
+
+        public async Task<IEnumerable<Company>> GetAll()
+        {
+            return await context.Companies.ToListAsync();
+        }
+
+        public async Task Update(Company company)
         {
             var change = context.Companies.Attach(company);
             change.State = EntityState.Modified;
             await context.SaveChangesAsync();
-            return company;
         }
+
     }
 }

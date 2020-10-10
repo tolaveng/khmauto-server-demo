@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Data.Api.Services;
@@ -40,10 +41,11 @@ namespace KHMAuto.Controllers
                 await _userService.AddUser(newUser);
             }catch(Exception ex)
             {
-                return Json(ResultResponse.Fail(ex.Message));
+                return Json(ResponseResult<string>.Fail(ex.Message));
             }
             return Ok();
         }
+
 
         [HttpGet("getusers")]
         public async Task<JsonResult> GetUsers()
@@ -58,6 +60,7 @@ namespace KHMAuto.Controllers
             return Json(results);
         }
 
+
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
@@ -68,6 +71,24 @@ namespace KHMAuto.Controllers
             }
             user.Password = string.Empty;
             return user;
+        }
+
+
+        [HttpPost("login")]
+        public async Task<ActionResult<ResponseResult<string>>> Login([FromBody] UserRequest user)
+        {
+            var dbUser = await _userService.GetByUsername(user.Username);
+            if (dbUser == null)
+            {
+                return Json(ResponseResult<string>.Fail("Login failed")); ;
+            }
+            if (UserService.IsPasswordMatch(user.Password, dbUser.Password))
+            {
+                dbUser.Password = string.Empty;
+                return Json(ResponseResult<string>.Success("Login successfully"));
+            }
+            
+            return Json(ResponseResult<string>.Fail("Login failed")); ;
         }
     }
 }
