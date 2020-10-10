@@ -37,6 +37,11 @@ namespace Data.Api.Services
             {
                 throw new ArgumentException("User information is required");
             }
+            var existedUser = await GetByUsername(user.Username);
+            if (existedUser != null)
+            {
+                throw new ArgumentException("User name is already existed");
+            }
             var newUser = _mapper.Map<User>(user);
             newUser.Password = HashPassword(user.Password);
             newUser.isAdmin = true;
@@ -64,7 +69,7 @@ namespace Data.Api.Services
             await _repository.UpdateUser(updateUser);
         }
 
-        public async Task<UserDto> FindByUsername(string username)
+        public async Task<UserDto> GetByUsername(string username)
         {
             var user = await _repository.GetByUsername(username);
             if (user == null) return null;

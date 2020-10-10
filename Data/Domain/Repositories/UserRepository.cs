@@ -29,12 +29,12 @@ namespace Data.Domain.Repositories
 
         public async Task<User> GetById(int userId)
         {
-            return await context.Users.FirstOrDefaultAsync(z => z.UserId == userId);
+            return await context.Users.SingleOrDefaultAsync(z => z.UserId == userId);
         }
 
         public async Task<User> GetByUsername(string userName)
         {
-            return await context.Users.FirstOrDefaultAsync(z => z.Username.Equals(userName, StringComparison.OrdinalIgnoreCase));
+            return await context.Users.LastOrDefaultAsync(z => z.Username.Equals(userName));
         }
 
         public async Task UpdateUser(User user)
