@@ -39,6 +39,10 @@ namespace KHMAuto
 
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
+            services.AddControllers().AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+            );
+
             // Add Repositories
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICarRepository, CarRepository>();

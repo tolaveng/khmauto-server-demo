@@ -52,5 +52,26 @@ namespace KHMAuto.Controllers
             response.message = "";
             return Json(response);
         }
+
+
+        [HttpPost("update")]
+        public async Task<ActionResult> Update([FromBody] InvoiceDto invoice)
+        {
+            var response = new ResponseResult<string>();
+            try
+            {
+                await _invoiceService.Update(invoice);
+            }
+            catch (Exception e)
+            {
+                response.success = false;
+                response.message = "Unable to update invoice";
+                Console.WriteLine(e.ToString());
+                return Json(response);
+            }
+            response.success = true;
+            response.message = "";
+            return Json(response);
+        }
     }
 }

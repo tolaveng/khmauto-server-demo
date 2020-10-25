@@ -21,7 +21,7 @@ namespace Data.Domain.Models
         public virtual Car Car { get; set; }
 
         public long CustomerId { get; set; }
-        public Customer Customer { get; set; }
+        public virtual Customer Customer { get; set; }
 
         public int UserId { get; set; }
 

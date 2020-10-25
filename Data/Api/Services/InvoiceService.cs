@@ -68,6 +68,7 @@ namespace Data.Api.Services
                 
         }
 
+
         public async Task Archive(long id)
         {
             await _invoiceRepository.Archive(id);
@@ -85,6 +86,7 @@ namespace Data.Api.Services
         public async Task<InvoiceDto> GetById(long id)
         {
             var invoice = await _invoiceRepository.GetById(id);
+            if (invoice == null) return null;
             return _mapper.Map<InvoiceDto>(invoice);
         }
 
@@ -99,8 +101,25 @@ namespace Data.Api.Services
 
         public async Task Update(InvoiceDto invoice)
         {
-            var update = _mapper.Map<Invoice>(invoice);
-            await _invoiceRepository.Update(update);
+            if (invoice.UserId == 0)
+            {
+                throw new ArgumentException("User is required");
+            }
+
+            var updateInvoice = _mapper.Map<Invoice>(invoice);
+            using (var transaction = await _transactionRepository.BeginTransaction())
+            {
+                try
+                {
+                    await _invoiceRepository.Update(updateInvoice);
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    throw ex;
+                }
+                await transaction.CommitAsync();
+            }
         }
     }
 }

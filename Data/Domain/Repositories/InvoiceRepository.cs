@@ -41,6 +41,9 @@ namespace Data.Domain.Repositories
         {
             return await context.Invoices
                 .Include(z => z.Services)
+                .Include(z => z.Customer)
+                .Include(z => z.Car)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(z => z.InvoiceId == id);
         }
 
