@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Data.Migrations
 {
-    public partial class InitialEntities : Migration
+    public partial class InitTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,24 +12,24 @@ namespace Data.Migrations
                 name: "Cars",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    CarId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    CarNo = table.Column<string>(nullable: true),
+                    PlateNo = table.Column<string>(nullable: true),
                     CarModel = table.Column<string>(nullable: true),
-                    CarType = table.Column<string>(nullable: true),
+                    CarMake = table.Column<string>(nullable: true),
                     CarYear = table.Column<int>(nullable: false),
-                    ODO = table.Column<string>(nullable: true)
+                    ODO = table.Column<long>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cars", x => x.Id);
+                    table.PrimaryKey("PK_Cars", x => x.CarId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Companies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
+                    CompanyId = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(nullable: true),
                     Abn = table.Column<string>(nullable: true),
@@ -45,14 +45,14 @@ namespace Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companies", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    CustomerId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     FullName = table.Column<string>(nullable: true),
                     Company = table.Column<string>(nullable: true),
@@ -63,7 +63,19 @@ namespace Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.PrimaryKey("PK_Customers", x => x.CustomerId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ServiceIndexs",
+                columns: table => new
+                {
+                    ServiceName = table.Column<string>(nullable: false),
+                    ServicePrice = table.Column<decimal>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ServiceIndexs", x => x.ServiceName);
                 });
 
             migrationBuilder.CreateTable(
@@ -86,7 +98,7 @@ namespace Data.Migrations
                 name: "Invoices",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    InvoiceId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     InvoiceDateTime = table.Column<DateTime>(nullable: false),
                     ModifiedDateTime = table.Column<DateTime>(nullable: false),
@@ -95,39 +107,34 @@ namespace Data.Migrations
                     PaymentMethod = table.Column<int>(nullable: false),
                     Gst = table.Column<float>(nullable: false),
                     Note = table.Column<string>(nullable: true),
-                    ODO = table.Column<string>(nullable: true),
-                    CarId = table.Column<long>(nullable: true),
-                    CustomerId = table.Column<long>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
+                    ODO = table.Column<long>(nullable: false),
+                    CarId = table.Column<long>(nullable: false),
+                    CustomerId = table.Column<long>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
+                    Archived = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Invoices", x => x.Id);
+                    table.PrimaryKey("PK_Invoices", x => x.InvoiceId);
                     table.ForeignKey(
                         name: "FK_Invoices_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "CarId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Invoices_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Invoices_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "CustomerId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Quotes",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    QuoteId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     QuoteDateTime = table.Column<DateTime>(nullable: false),
                     ModifiedDateTime = table.Column<DateTime>(nullable: false),
@@ -139,24 +146,18 @@ namespace Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Quotes", x => x.Id);
+                    table.PrimaryKey("PK_Quotes", x => x.QuoteId);
                     table.ForeignKey(
                         name: "FK_Quotes_Cars_CarId",
                         column: x => x.CarId,
                         principalTable: "Cars",
-                        principalColumn: "Id",
+                        principalColumn: "CarId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Quotes_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Quotes_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
+                        principalColumn: "CustomerId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -164,29 +165,29 @@ namespace Data.Migrations
                 name: "Services",
                 columns: table => new
                 {
-                    Id = table.Column<long>(nullable: false)
+                    ServiceId = table.Column<long>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ServiceName = table.Column<string>(nullable: true),
                     ServicePrice = table.Column<decimal>(nullable: false),
                     ServiceQty = table.Column<int>(nullable: false),
-                    InvoiceId = table.Column<long>(nullable: false),
-                    QuoteId = table.Column<long>(nullable: false)
+                    InvoiceId = table.Column<long>(nullable: true),
+                    QuoteId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Services", x => x.Id);
+                    table.PrimaryKey("PK_Services", x => x.ServiceId);
                     table.ForeignKey(
                         name: "FK_Services_Invoices_InvoiceId",
                         column: x => x.InvoiceId,
                         principalTable: "Invoices",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "InvoiceId",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Services_Quotes_QuoteId",
                         column: x => x.QuoteId,
                         principalTable: "Quotes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "QuoteId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -200,11 +201,6 @@ namespace Data.Migrations
                 column: "CustomerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Invoices_UserId",
-                table: "Invoices",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Quotes_CarId",
                 table: "Quotes",
                 column: "CarId");
@@ -213,11 +209,6 @@ namespace Data.Migrations
                 name: "IX_Quotes_CustomerId",
                 table: "Quotes",
                 column: "CustomerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Quotes_UserId",
-                table: "Quotes",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_InvoiceId",
@@ -236,7 +227,13 @@ namespace Data.Migrations
                 name: "Companies");
 
             migrationBuilder.DropTable(
+                name: "ServiceIndexs");
+
+            migrationBuilder.DropTable(
                 name: "Services");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Invoices");
@@ -249,9 +246,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
-
-            migrationBuilder.DropTable(
-                name: "Users");
         }
     }
 }

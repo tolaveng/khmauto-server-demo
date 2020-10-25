@@ -25,40 +25,37 @@ namespace Data.Domain.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Invoice>()
-                .HasMany(z => z.Services)
-                .WithOne(z => z.Invoice);
+            modelBuilder.Entity<Car>()
+                .HasMany(z => z.Invoices)
+                .WithOne(z => z.Car);
 
-            modelBuilder.Entity<Invoice>()
-                .HasOne(z => z.Car)
-                .WithMany(z => z.Invoices);
+            modelBuilder.Entity<Car>()
+                .HasMany(z => z.Quotes)
+                .WithOne(z => z.Car);
 
-            modelBuilder.Entity<Invoice>()
-                .HasOne(z => z.Customer)
-                .WithMany(z => z.Invoices);
 
-            modelBuilder.Entity<Invoice>()
-                .HasOne(z => z.User)
-                .WithMany(z => z.Invoices);
+            modelBuilder.Entity<Customer>()
+                .HasMany(z => z.Invoices)
+                .WithOne(z => z.Customer);
 
-            modelBuilder.Entity<Quote>()
-                .HasMany(z => z.Services)
-                .WithOne(z => z.Quote);
 
-            modelBuilder.Entity<Quote>()
-                .HasOne(z => z.Car)
-                .WithMany(z => z.Quotes);
+            modelBuilder.Entity<Customer>()
+                .HasMany(z => z.Quotes)
+                .WithOne(z => z.Customer);
 
-            modelBuilder.Entity<Quote>()
-                .HasOne(z => z.Customer)
-                .WithMany(z => z.Quotes);
 
-            modelBuilder.Entity<Quote>()
-                .HasOne(z => z.User)
-                .WithMany(z => z.Quotes);
+            modelBuilder.Entity<Service>()
+                .HasOne(z => z.Invoice)
+                .WithMany(z => z.Services);
+
+            modelBuilder.Entity<Service>()
+                .HasOne(z => z.Quote)
+                .WithMany(z => z.Services);
+
 
             modelBuilder.Entity<ServiceIndex>()
                 .HasKey(z => z.ServiceName);
+
         }
 
     }

@@ -66,5 +66,47 @@ namespace Data.Services
             var update = _mapper.Map<Customer>(customer);
             await _repository.Update(update);
         }
+
+        public async Task<CustomerDto> CreateOrUpdate(CustomerDto customer)
+        {
+            if (customer.CustomerId != 0)
+            {
+                var update = _mapper.Map<Customer>(customer);
+                var updatedCustomer = await _repository.Update(update);
+                return _mapper.Map<CustomerDto>(updatedCustomer);
+            }
+            else
+            {
+                // check by phone number
+                Customer toUpdate = null;
+                if (!string.IsNullOrWhiteSpace(customer.Phone))
+                {
+                    toUpdate = await _repository.GetByPhone(customer.Phone);
+                }
+                if (toUpdate == null && !string.IsNullOrWhiteSpace(customer.Email))
+                {
+                    toUpdate = await _repository.GetByEmail(customer.Email);
+                }
+
+                if (toUpdate != null)
+                {
+                    toUpdate.FullName = customer.FullName;
+                    toUpdate.Company = customer.Company;
+                    toUpdate.Abn = customer.Abn;
+                    toUpdate.Address = customer.Address;
+                    toUpdate.Email = customer.Email;
+                    toUpdate.Phone = customer.Phone;
+                    var updatedCustomer = await _repository.Update(toUpdate);
+                    return _mapper.Map<CustomerDto>(updatedCustomer);
+
+                } else
+                {
+                    var insert = _mapper.Map<Customer>(customer);
+                    var newCustomer = await _repository.Add(insert);
+                    return _mapper.Map<CustomerDto>(newCustomer);
+                }
+
+            }
+        }
     }
 }

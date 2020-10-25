@@ -51,16 +51,16 @@ namespace KHMAuto.Controllers
                 BankAccountName = "acc name",
                 BankAccountNumber = "acc num",
             };
-            await _companyService.CreateCompany(company);
+            await _companyService.Create(company);
             return Ok();
         }
 
         [HttpPost("updatecompany")]
-        public async Task<ActionResult> UpdateCompany([FromBody] CompanyDto company)
+        public async Task<ActionResult> Update([FromBody] CompanyDto company)
         {
             try
             {
-                await _companyService.UpdateCompany(company);
+                await _companyService.Update(company);
             }catch(Exception ex)
             {
                 return Json(ResponseResult<string>.Fail("Failed"));

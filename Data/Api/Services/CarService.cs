@@ -47,16 +47,16 @@ namespace Data.Services
             return _mapper.Map<CarDto>(car);
         }
 
-        public async Task<CarDto> GetByCarNo(string carNo)
+        public async Task<CarDto> GetByPlateNo(string PlateNo)
         {
-            var car = await _repository.GetByCarNo(carNo);
+            var car = await _repository.GetByPlateNo(PlateNo);
             return _mapper.Map<CarDto>(car);
         }
 
-        public async Task<PagedResponse<CarDto>> FindByCarNoPaged(string carNo, PaginationQuery pagination)
+        public async Task<PagedResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
-            var cars = await _repository.FindByCarNoPaged(carNo, paginationFilter);
+            var cars = await _repository.FindByPlateNoPaged(PlateNo, paginationFilter);
             var totalCount = await _repository.GetCount();
             var data = _mapper.Map<List<CarDto>>(cars);
 
@@ -67,6 +67,44 @@ namespace Data.Services
         {
             var update = _mapper.Map<Car>(car);
             await _repository.Update(update);
+        }
+
+        public async Task<CarDto> CreateOrUpdate(CarDto car)
+        {
+            if (car.CarId != 0)
+            {
+                var update = _mapper.Map<Car>(car);
+                var updated = await _repository.Update(update);
+                return _mapper.Map<CarDto>(updated);
+            }
+            else
+            {
+                Car toUpdate = null;
+                if (!string.IsNullOrWhiteSpace(car.PlateNo))
+                {
+                    toUpdate = await _repository.GetByPlateNo(car.PlateNo);
+                }
+                
+                if (toUpdate != null)
+                {
+                    toUpdate.CarModel = car.CarModel.Trim();
+                    toUpdate.PlateNo = car.PlateNo.Trim();
+                    toUpdate.CarMake = car.CarMake;
+                    toUpdate.CarYear = car.CarYear;
+                    toUpdate.ODO = car.ODO;
+                    
+                    var updated = await _repository.Update(toUpdate);
+                    return _mapper.Map<CarDto>(updated);
+
+                }
+                else
+                {
+                    var insert = _mapper.Map<Car>(car);
+                    var newCar = await _repository.Add(insert);
+                    return _mapper.Map<CarDto>(newCar);
+                }
+
+            }
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Data.DTO
 {
     public class CompanyDto
     {
-        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Abn { get; set; }
         public string Address { get; set; }

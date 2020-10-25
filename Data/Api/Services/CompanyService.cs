@@ -22,7 +22,7 @@ namespace Data.Api.Services
 
         }
 
-        public async Task CreateCompany(CompanyDto company)
+        public async Task Create(CompanyDto company)
         {
             var newCompany = _mapper.Map<Company>(company);
             await _repository.Add(newCompany);
@@ -30,7 +30,8 @@ namespace Data.Api.Services
 
         public async Task<CompanyDto> Get()
         {
-            var company = _repository.GetAll().Result.FirstOrDefault();
+            var companies = await _repository.GetAll();
+            var company = companies.FirstOrDefault();
             if (company != null)
             {
                 return _mapper.Map<CompanyDto>(company);
@@ -38,7 +39,7 @@ namespace Data.Api.Services
             return new CompanyDto();
         }
 
-        public async Task UpdateCompany(CompanyDto company)
+        public async Task Update(CompanyDto company)
         {
             var update = _mapper.Map<Company>(company);
             await _repository.Update(update);

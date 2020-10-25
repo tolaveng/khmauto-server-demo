@@ -6,7 +6,7 @@ namespace Data.Domain.Models
 {
     public class Customer
     {
-        public long Id { get; set; }
+        public long CustomerId { get; set; }
         public string FullName { get; set; }
         public string Company { get; set; }
         public string Phone { get; set; }
@@ -14,9 +14,9 @@ namespace Data.Domain.Models
         public string Address { get; set; }
         public string Abn { get; set; }
 
-        public ICollection<Invoice> Invoices { get; set; }
-        public ICollection<Quote> Quotes { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
+        public virtual ICollection<Quote> Quotes { get; set; }
 
-        protected Customer() { }
+        public Customer() { }
     }
 }

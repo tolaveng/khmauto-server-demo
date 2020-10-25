@@ -15,6 +15,7 @@ namespace KHMAuto.Responses
 
         public ResponseResult()
         {
+            success = false;
         }
 
         public static ResponseResult<T> Success(string message)

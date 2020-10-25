@@ -61,7 +61,7 @@ namespace Data.Api.Services
 
         public async Task Update(ServiceDto service)
         {
-            var entry = await _repository.GetById(service.Id);
+            var entry = await _repository.GetById(service.ServiceId);
             if (entry == null)
             {
                 throw new ArgumentException("Service is not found");
@@ -76,7 +76,7 @@ namespace Data.Api.Services
             var result = new List<ServiceDto>();
             foreach(var invoice in invoices)
             {
-                var services = await _repository.GetByInvoiceId(invoice.Id);
+                var services = await _repository.GetByInvoiceId(invoice.InvoiceId);
                 result.AddRange(_mapper.Map<List<ServiceDto>>(services));
             }
             return result;

@@ -16,5 +16,6 @@ namespace Data.Services
         Task Add(CustomerDto customer);
         Task Delete(long id);
         Task Update(CustomerDto customer);
+        Task<CustomerDto> CreateOrUpdate(CustomerDto customer);
     }
 }

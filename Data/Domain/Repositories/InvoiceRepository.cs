@@ -41,7 +41,7 @@ namespace Data.Domain.Repositories
         {
             return await context.Invoices
                 .Include(z => z.Services)
-                .SingleOrDefaultAsync(z => z.Id == id);
+                .SingleOrDefaultAsync(z => z.InvoiceId == id);
         }
 
         public async Task<Invoice> Update(Invoice invoice)
@@ -59,13 +59,13 @@ namespace Data.Domain.Repositories
 
         public async Task<IEnumerable<Invoice>> GetByCarId(long carId)
         {
-            return await context.Invoices.Where(z => z.Car.Id == carId).ToListAsync();
+            return await context.Invoices.Where(z => z.Car.CarId == carId).ToListAsync();
         }
 
         public async Task<IEnumerable<Invoice>> GetAllPaged(PaginationFilter pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await context.Invoices.Where(z => !z.Archived).OrderByDescending(z => z.Id)
+            return await context.Invoices.Where(z => !z.Archived).OrderByDescending(z => z.InvoiceId)
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
@@ -73,12 +73,12 @@ namespace Data.Domain.Repositories
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Invoices.Where(z => !z.Archived &&
-                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.CarNo.Contains(query.PlateNo)) &&
+                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
             )
-                .OrderByDescending(z => z.Id)
+                .OrderByDescending(z => z.CarId)
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
@@ -86,7 +86,7 @@ namespace Data.Domain.Repositories
         public async Task<long> GetCountByQuery(InvoiceQuery query)
         {
             return await context.Invoices.Where(z => !z.Archived &&
-                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.CarNo.Contains(query.PlateNo)) &&
+                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))

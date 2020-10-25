@@ -13,11 +13,7 @@ namespace Data.Domain.Models
         public string FullName { get; set; }
         public bool isAdmin { get; set; }
 
-
-        public ICollection<Invoice> Invoices { get; set; }
-        public ICollection<Quote> Quotes { get; set; }
-
-        protected User() { }
+        public User() { }
 
     }
 }

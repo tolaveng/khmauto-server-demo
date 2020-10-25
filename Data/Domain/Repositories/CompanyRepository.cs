@@ -24,7 +24,7 @@ namespace Data.Domain.Repositories
 
         public async Task<Company> GetById(int id)
         {
-            return await context.Companies.SingleOrDefaultAsync( z => z.Id == id);
+            return await context.Companies.SingleOrDefaultAsync( z => z.CompanyId == id);
         }
 
         public async Task<IEnumerable<Company>> GetAll()

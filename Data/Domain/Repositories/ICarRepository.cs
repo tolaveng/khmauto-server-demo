@@ -10,9 +10,9 @@ namespace Data.Domain.Repositories
     public interface ICarRepository
     {
         public Task<IEnumerable<Car>> GetAllPaged(PaginationFilter pagination);
-        public Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationFilter pagination);
+        public Task<IEnumerable<Car>> FindByPlateNoPaged(string PlateNo, PaginationFilter pagination);
         public Task<Car> GetById(long id);
-        public Task<Car> GetByCarNo(string carNo);
+        public Task<Car> GetByPlateNo(string PlateNo);
         public Task<Car> Add(Car car);
         public Task<Car> Update(Car car);
         public Task<bool> Delete(long id);

@@ -40,6 +40,7 @@ namespace KHMAuto
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
             // Add Repositories
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();

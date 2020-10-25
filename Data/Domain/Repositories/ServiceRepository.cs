@@ -25,7 +25,7 @@ namespace Data.Domain.Repositories
 
         public async Task<bool> Delete(long id)
         {
-            var service = context.Services.FirstOrDefault(z => z.Id == id);
+            var service = context.Services.FirstOrDefault(z => z.ServiceId == id);
             if (service == null) return false;
             context.Services.Remove(service);
             await context.SaveChangesAsync();
@@ -34,7 +34,7 @@ namespace Data.Domain.Repositories
 
         public async Task<Service> GetById(long id)
         {
-            return await context.Services.SingleOrDefaultAsync(z => z.Id == id);
+            return await context.Services.SingleOrDefaultAsync(z => z.ServiceId == id);
         }
 
         public async Task<IEnumerable<Service>> GetByInvoiceId(long invoiceId)

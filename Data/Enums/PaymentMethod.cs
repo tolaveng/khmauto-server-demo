@@ -6,7 +6,7 @@ namespace Data.Enums
 {
     public enum PaymentMethod
     {
-        Cash,
-        Card
+        Cash = 1,
+        Card = 2
     }
 }

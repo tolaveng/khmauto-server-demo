@@ -6,7 +6,7 @@ namespace Data.Domain.Models
 {
     public class Company
     {
-        public int Id { get; set; }
+        public int CompanyId { get; set; }
         public string Name { get; set; }
         public string Abn { get; set; }
         public string Address { get; set; }
@@ -19,6 +19,6 @@ namespace Data.Domain.Models
         public string BankAccountName { get; set; }
         public string BankAccountNumber { get; set; }
 
-        protected Company() { }
+        public Company() { }
     }
 }

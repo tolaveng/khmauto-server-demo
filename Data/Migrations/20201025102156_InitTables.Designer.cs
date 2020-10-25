@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20200727115942_InitialEntities")]
-    partial class InitialEntities
+    [Migration("20201025102156_InitTables")]
+    partial class InitTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,34 +23,34 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Domain.Models.Car", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("CarId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<string>("CarMake")
+                        .HasColumnType("text");
+
                     b.Property<string>("CarModel")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CarNo")
-                        .HasColumnType("text");
-
-                    b.Property<string>("CarType")
                         .HasColumnType("text");
 
                     b.Property<int>("CarYear")
                         .HasColumnType("integer");
 
-                    b.Property<string>("ODO")
+                    b.Property<long>("ODO")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("PlateNo")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("CarId");
 
                     b.ToTable("Cars");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Company", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("CompanyId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -88,14 +88,14 @@ namespace Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("CompanyId");
 
                     b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Customer", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -118,22 +118,25 @@ namespace Data.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text");
 
-                    b.HasKey("Id");
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Invoice", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("InvoiceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long?>("CarId")
+                    b.Property<bool>("Archived")
+                        .HasColumnType("boolean");
+
+                    b.Property<long>("CarId")
                         .HasColumnType("bigint");
 
-                    b.Property<long?>("CustomerId")
+                    b.Property<long>("CustomerId")
                         .HasColumnType("bigint");
 
                     b.Property<float>("Gst")
@@ -151,8 +154,8 @@ namespace Data.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("text");
 
-                    b.Property<string>("ODO")
-                        .HasColumnType("text");
+                    b.Property<long>("ODO")
+                        .HasColumnType("bigint");
 
                     b.Property<DateTime>("PaidDate")
                         .HasColumnType("timestamp without time zone");
@@ -160,23 +163,21 @@ namespace Data.Migrations
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("InvoiceId");
 
                     b.HasIndex("CarId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Invoices");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Quote", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("QuoteId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
@@ -202,28 +203,26 @@ namespace Data.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("QuoteId");
 
                     b.HasIndex("CarId");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Quotes");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Service", b =>
                 {
-                    b.Property<long>("Id")
+                    b.Property<long>("ServiceId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<long>("InvoiceId")
+                    b.Property<long?>("InvoiceId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("QuoteId")
+                    b.Property<long?>("QuoteId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("ServiceName")
@@ -235,13 +234,26 @@ namespace Data.Migrations
                     b.Property<int>("ServiceQty")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.HasKey("ServiceId");
 
                     b.HasIndex("InvoiceId");
 
                     b.HasIndex("QuoteId");
 
                     b.ToTable("Services");
+                });
+
+            modelBuilder.Entity("Data.Domain.Models.ServiceIndex", b =>
+                {
+                    b.Property<string>("ServiceName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("ServicePrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("ServiceName");
+
+                    b.ToTable("ServiceIndexs");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.User", b =>
@@ -272,15 +284,15 @@ namespace Data.Migrations
                 {
                     b.HasOne("Data.Domain.Models.Car", "Car")
                         .WithMany("Invoices")
-                        .HasForeignKey("CarId");
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Data.Domain.Models.Customer", "Customer")
                         .WithMany("Invoices")
-                        .HasForeignKey("CustomerId");
-
-                    b.HasOne("Data.Domain.Models.User", "User")
-                        .WithMany("Invoices")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Quote", b =>
@@ -296,27 +308,17 @@ namespace Data.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Data.Domain.Models.User", "User")
-                        .WithMany("Quotes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Service", b =>
                 {
                     b.HasOne("Data.Domain.Models.Invoice", "Invoice")
                         .WithMany("Services")
-                        .HasForeignKey("InvoiceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("InvoiceId");
 
                     b.HasOne("Data.Domain.Models.Quote", "Quote")
                         .WithMany("Services")
-                        .HasForeignKey("QuoteId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("QuoteId");
                 });
 #pragma warning restore 612, 618
         }

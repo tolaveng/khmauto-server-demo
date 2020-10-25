@@ -26,7 +26,7 @@ namespace Data.Domain.Repositories
 
         public async Task<bool> Delete(long id)
         {
-            var car = context.Cars.FirstOrDefault(z => z.Id == id);
+            var car = context.Cars.FirstOrDefault(z => z.CarId == id);
             if (car == null) return false;
             context.Cars.Remove(car);
             await context.SaveChangesAsync();
@@ -38,9 +38,9 @@ namespace Data.Domain.Repositories
             return await context.Cars.FindAsync(id);
         }
 
-        public async Task<Car> GetByCarNo(string carNo)
+        public async Task<Car> GetByPlateNo(string PlateNo)
         {
-            return await context.Cars.FirstOrDefaultAsync(z => z.CarNo.Trim().Equals(carNo.Trim(),StringComparison.OrdinalIgnoreCase));
+            return await context.Cars.FirstOrDefaultAsync(z => z.PlateNo.ToUpper().Equals(PlateNo.ToUpper()));
         }
 
         public async Task<Car> Update(Car car)
@@ -57,11 +57,11 @@ namespace Data.Domain.Repositories
             return await context.Cars.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
-        public async Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationFilter pagination)
+        public async Task<IEnumerable<Car>> FindByPlateNoPaged(string PlateNo, PaginationFilter pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
 
-            return await context.Cars.Where(z => z.CarNo.ToUpper().Contains(carNo.Trim().ToUpper()))
+            return await context.Cars.Where(z => z.PlateNo.ToUpper().Contains(PlateNo.ToUpper()))
                 .Skip(skip).Take(pagination.PageSize)
                 .ToListAsync();
         }
