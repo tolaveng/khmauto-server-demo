@@ -34,13 +34,14 @@ namespace Data.Services
             await _repository.Delete(id);
         }
 
-        public async Task<PagedResponse<CustomerDto>> GetAllPaged(PaginationQuery pagination)
+        public async Task<PaginationResponse<CustomerDto>> GetAllPaged(PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCount();
             var customers = await _repository.GetAllPaged(paginationFilter);
             var data = _mapper.Map<List<CustomerDto>>(customers);
-            return new PagedResponse<CustomerDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<CustomerDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task<CustomerDto> GetById(long id)

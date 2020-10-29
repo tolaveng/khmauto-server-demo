@@ -34,22 +34,24 @@ namespace Data.Api.Services
             await _repository.Delete(id);
         }
 
-        public async Task<PagedResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination)
+        public async Task<PaginationResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCount();
             var quotes = await _repository.GetAllPaged(paginationFilter);
             var data = _mapper.Map<List<QuoteDto>>(quotes);
-            return new PagedResponse<QuoteDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<QuoteDto>(data, totalCount, hasNext, pagination);
         }
 
-        public async Task<PagedResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
+        public async Task<PaginationResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCountByQuery(query);
             var quotes = await _repository.GetByQuery(paginationFilter, query);
             var data = _mapper.Map<List<QuoteDto>>(quotes);
-            return new PagedResponse<QuoteDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<QuoteDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task Update(QuoteDto quote)

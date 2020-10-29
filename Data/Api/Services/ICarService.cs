@@ -9,8 +9,8 @@ namespace Data.Services
 {
     public interface ICarService
     {
-        Task<PagedResponse<CarDto>> GetAllPaged(PaginationQuery pagination);
-        Task<PagedResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination);
+        Task<PaginationResponse<CarDto>> GetAllPaged(PaginationQuery pagination);
+        Task<PaginationResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination);
         Task<CarDto> GetById(long id);
         Task<CarDto> GetByPlateNo(string PlateNo);
         Task Add(CarDto car);

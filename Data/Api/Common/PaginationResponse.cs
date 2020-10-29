@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Data.Api.Common
 {
-    public class PagedResponse<T>
+    public class PaginationResponse<T>
     {
 
         public IEnumerable<T> Data { get; set; }
@@ -14,24 +14,28 @@ namespace Data.Api.Common
 
         public long TotalCount { get; set; }
 
-        public PagedResponse()
+        public bool HasNext { get; set; }
+
+        public PaginationResponse()
         {
         }
 
-        public PagedResponse(IEnumerable<T> data, long totalCount, int pageNumber, int pageSize)
+        public PaginationResponse(IEnumerable<T> data, long totalCount, bool hasNext, int pageNumber, int pageSize)
         {
             Data = data;
             TotalCount = totalCount;
             PageNumber = pageNumber;
             PageSize = pageSize;
+            HasNext = hasNext;
         }
 
-        public PagedResponse(IEnumerable<T> data, long totalCount, PaginationQuery pagination)
+        public PaginationResponse(IEnumerable<T> data, long totalCount, bool hasNext, PaginationQuery pagination)
         {
             Data = data;
             TotalCount = totalCount;
             PageNumber = pagination.PageNumber;
             PageSize = pagination.PageSize;
+            HasNext = hasNext;
         }
     }
 }

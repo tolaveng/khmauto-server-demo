@@ -9,7 +9,7 @@ namespace Data.Services
 {
     public interface ICustomerService
     {
-        Task<PagedResponse<CustomerDto>> GetAllPaged(PaginationQuery pagination);
+        Task<PaginationResponse<CustomerDto>> GetAllPaged(PaginationQuery pagination);
         Task<CustomerDto> GetById(long id);
         Task<CustomerDto> GetByPhoneNo(string phoneNo);
         Task<CustomerDto> GetByName(string name);

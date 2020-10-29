@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data.Api.Common;
 using Data.Api.Services;
 using Data.DTO;
+using KHMAuto.Requests;
 using KHMAuto.Responses;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,13 +23,29 @@ namespace KHMAuto.Controllers
         }
 
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<InvoiceDto>> Get(long id)
+        [HttpGet("getbyid")]
+        public async Task<ActionResult<InvoiceDto>> GetById([FromBody] IdRequest idRequest)
         {
-            var invoice = await _invoiceService.GetById(id);
+            var invoice = await _invoiceService.GetById(idRequest.id);
             if (invoice != null)
             {
                 return Json(invoice);
+            }
+            return Ok();
+        }
+
+        [HttpGet("getall")]
+        public async Task<ActionResult<InvoiceDto>> GetAll([FromBody] PageRequest pageRequest)
+        {
+            var pageQuery = new PaginationQuery()
+            {
+                PageNumber = pageRequest.PageNumber,
+                PageSize = pageRequest.PageSize
+            };
+            var response = await _invoiceService.GetAllPaged(pageQuery);
+            if (response != null)
+            {
+                return Json(response);
             }
             return Ok();
         }

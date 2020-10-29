@@ -74,13 +74,14 @@ namespace Data.Api.Services
             await _invoiceRepository.Archive(id);
         }
 
-        public async Task<PagedResponse<InvoiceDto>> GetAllPaged(PaginationQuery pagination)
+        public async Task<PaginationResponse<InvoiceDto>> GetAllPaged(PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _invoiceRepository.GetCount();
             var invoices = await _invoiceRepository.GetAllPaged(paginationFilter);
             var data = _mapper.Map<List<InvoiceDto>>(invoices);
-            return new PagedResponse<InvoiceDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task<InvoiceDto> GetById(long id)
@@ -90,13 +91,14 @@ namespace Data.Api.Services
             return _mapper.Map<InvoiceDto>(invoice);
         }
 
-        public async Task<PagedResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
+        public async Task<PaginationResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _invoiceRepository.GetCountByQuery(query);
             var invoices = await _invoiceRepository.GetByQuery(paginationFilter, query);
             var data = _mapper.Map<List<InvoiceDto>>(invoices);
-            return new PagedResponse<InvoiceDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task Update(InvoiceDto invoice)

@@ -32,13 +32,14 @@ namespace Data.Services
             await _repository.Delete(id);
         }
 
-        public async Task<PagedResponse<CarDto>> GetAllPaged(PaginationQuery pagination)
+        public async Task<PaginationResponse<CarDto>> GetAllPaged(PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCount();
             var cars = await _repository.GetAllPaged(paginationFilter);
             var data = _mapper.Map<List<CarDto>>(cars);
-            return new PagedResponse<CarDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<CarDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task<CarDto> GetById(long id)
@@ -53,14 +54,14 @@ namespace Data.Services
             return _mapper.Map<CarDto>(car);
         }
 
-        public async Task<PagedResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination)
+        public async Task<PaginationResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination)
         {
             var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var cars = await _repository.FindByPlateNoPaged(PlateNo, paginationFilter);
             var totalCount = await _repository.GetCount();
             var data = _mapper.Map<List<CarDto>>(cars);
-
-            return new PagedResponse<CarDto>(data, totalCount, pagination);
+            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            return new PaginationResponse<CarDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task Update(CarDto car)

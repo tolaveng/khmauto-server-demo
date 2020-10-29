@@ -9,8 +9,8 @@ namespace Data.Api.Services
 {
     public interface IQuoteService
     {
-        Task<PagedResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination);
-        Task<PagedResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query);
+        Task<PaginationResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination);
+        Task<PaginationResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query);
         Task Add(QuoteDto quote);
         Task Delete(long id);
         Task Update(QuoteDto quote);
