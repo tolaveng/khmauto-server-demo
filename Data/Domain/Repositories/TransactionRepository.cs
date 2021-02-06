@@ -19,20 +19,5 @@ namespace Data.Domain.Repositories
         {
             return await context.Database.BeginTransactionAsync();
         }
-
-        public async Task CommitTransaction()
-        {
-            context.Database.CommitTransaction();
-        }
-
-        public async Task DisposeTransaction()
-        {
-            context.Database.CurrentTransaction.Dispose();
-        }
-
-        public async Task RollbackTransaction()
-        {
-            context.Database.RollbackTransaction();
-        }
     }
 }

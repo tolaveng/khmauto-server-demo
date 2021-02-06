@@ -113,7 +113,7 @@ namespace Data.Domain.Repositories
             {
                 return await context.Invoices.MaxAsync(z => z.InvoiceNo);
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 return 0;
             }

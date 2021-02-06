@@ -126,6 +126,11 @@ namespace Data.Api.Services
             {
                 try
                 {
+                    var existInvoice = await _invoiceRepository.GetById(updateInvoice.InvoiceId);
+                    if (existInvoice == null)
+                    {
+                        throw new ArgumentException("Invoice Id is not found.");
+                    }
                     await _invoiceRepository.Update(updateInvoice);
                 }
                 catch (Exception ex)
