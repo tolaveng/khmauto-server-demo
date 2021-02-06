@@ -26,7 +26,7 @@ namespace Data.Api.Services
             ICustomerService customerService,
             ICarService carService,
             ITransactionRepository transactionRepository,
-        IMapper mapper)
+            IMapper mapper)
         {
             _invoiceRepository = invoiceRepository;
             _serviceRepository = serviceRepository;
@@ -34,7 +34,6 @@ namespace Data.Api.Services
             _carService = carService;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
-
         }
 
         public async Task Create(InvoiceDto invoice)
@@ -49,6 +48,9 @@ namespace Data.Api.Services
             {
                 try
                 {
+                    var maxInvoiceNo = await _invoiceRepository.GetMaxInvoiceNo();
+                    newInvoice.InvoiceNo = maxInvoiceNo + 1;
+
                     var customer = await _customerService.CreateOrUpdate(invoice.Customer);
                     newInvoice.CustomerId = customer.CustomerId;
                     newInvoice.Customer = null;
@@ -58,14 +60,14 @@ namespace Data.Api.Services
                     newInvoice.Car = null;
                     
                     newInvoice = await _invoiceRepository.Add(newInvoice);
-                }catch(Exception ex)
+                }
+                catch(Exception ex)
                 {
                     await transaction.RollbackAsync();
                     throw ex;
-                }
+                }          
                 await transaction.CommitAsync();
-            }
-                
+            }   
         }
 
 
@@ -84,12 +86,22 @@ namespace Data.Api.Services
             return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
 
+
         public async Task<InvoiceDto> GetById(long id)
         {
             var invoice = await _invoiceRepository.GetById(id);
             if (invoice == null) return null;
             return _mapper.Map<InvoiceDto>(invoice);
         }
+
+
+        public async Task<InvoiceDto> GetByNo(long no)
+        {
+            var invoice = await _invoiceRepository.GetByNo(no);
+            if (invoice == null) return null;
+            return _mapper.Map<InvoiceDto>(invoice);
+        }
+
 
         public async Task<PaginationResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
@@ -100,6 +112,7 @@ namespace Data.Api.Services
             var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
             return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
+
 
         public async Task Update(InvoiceDto invoice)
         {

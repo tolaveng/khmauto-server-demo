@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 
 namespace KHMAuto.Requests
 {
-    public class IdRequest
+    public class NoRequest
     {
-        public long id { get; set; }
-        public IdRequest()
+        public long No { get; set; }
+        public NoRequest()
         {
         }
     }

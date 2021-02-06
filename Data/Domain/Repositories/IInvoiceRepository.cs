@@ -13,10 +13,12 @@ namespace Data.Domain.Repositories
         public Task<IEnumerable<Invoice>> GetAllPaged(PaginationFilter pagination);
         public Task<IEnumerable<Invoice>> GetByQuery(PaginationFilter pagination, InvoiceQuery query);
         public Task<Invoice> GetById(long id);
+        public Task<Invoice> GetByNo(long id);
         public Task<Invoice> Add(Invoice invoice);
         public Task<Invoice> Update(Invoice invoice);
         public Task<bool> Archive(long id);
         public Task<long> GetCount();
+        public Task<long> GetMaxInvoiceNo();
         public Task<long> GetCountByQuery(InvoiceQuery query);
         public Task<IEnumerable<Invoice>> GetByCarId(long carId);
     }

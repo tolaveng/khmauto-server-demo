@@ -4,6 +4,7 @@ using Data.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,11 +41,21 @@ namespace Data.Domain.Repositories
         public async Task<Invoice> GetById(long id)
         {
             return await context.Invoices
+                    .Include(z => z.Services)
+                    .Include(z => z.Customer)
+                    .Include(z => z.Car)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(z => z.InvoiceId == id);
+        }
+
+        public async Task<Invoice> GetByNo(long no)
+        {
+            return await context.Invoices
                 .Include(z => z.Services)
                 .Include(z => z.Customer)
                 .Include(z => z.Car)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(z => z.InvoiceId == id);
+                .SingleOrDefaultAsync(z => z.InvoiceNo == no);
         }
 
         public async Task<Invoice> Update(Invoice invoice)
@@ -94,6 +105,18 @@ namespace Data.Domain.Repositories
                 (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
             ).CountAsync();
+        }
+
+        public async Task<long> GetMaxInvoiceNo()
+        {
+            try
+            {
+                return await context.Invoices.MaxAsync(z => z.InvoiceNo);
+            }
+            catch(Exception ex)
+            {
+                return 0;
+            }
         }
     }
 }

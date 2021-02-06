@@ -41,7 +41,8 @@ namespace Data.Domain.Repositories
 
         public async Task<Customer> GetByEmail(string email)
         {
-            return await context.Customers.FirstOrDefaultAsync(z => z.Email.Trim().Equals(email.Trim()));
+            var lookingEmail = email.Replace(" ", "").ToLower().Trim();
+            return await context.Customers.FirstOrDefaultAsync(z => z.Email.Trim().Equals(lookingEmail));
         }
 
         public async Task<Customer> GetByFullName(string name)
@@ -56,7 +57,8 @@ namespace Data.Domain.Repositories
 
         public async Task<Customer> GetByPhone(string phone)
         {
-            return await context.Customers.FirstOrDefaultAsync(z => z.Phone.Trim().Equals(phone.Trim()));
+            var lookingPhone = phone.Replace(" ", "").Trim();
+            return await context.Customers.FirstOrDefaultAsync(z => z.Phone.Replace(" ", "").Trim().Equals(lookingPhone));
         }
 
         public async Task<long> GetCount()

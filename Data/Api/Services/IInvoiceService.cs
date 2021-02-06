@@ -10,6 +10,7 @@ namespace Data.Api.Services
     public interface IInvoiceService
     {
         Task<InvoiceDto> GetById(long id);
+        Task<InvoiceDto> GetByNo(long no);
         Task<PaginationResponse<InvoiceDto>> GetAllPaged(PaginationQuery pagination);
         Task<PaginationResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query);
         Task Create(InvoiceDto invoice);

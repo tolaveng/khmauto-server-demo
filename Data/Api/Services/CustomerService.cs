@@ -73,6 +73,7 @@ namespace Data.Services
             if (customer.CustomerId != 0)
             {
                 var update = _mapper.Map<Customer>(customer);
+                update.Phone = update.Phone.Replace(" ", "").Trim();
                 var updatedCustomer = await _repository.Update(update);
                 return _mapper.Map<CustomerDto>(updatedCustomer);
             }
@@ -96,7 +97,7 @@ namespace Data.Services
                     toUpdate.Abn = customer.Abn;
                     toUpdate.Address = customer.Address;
                     toUpdate.Email = customer.Email;
-                    toUpdate.Phone = customer.Phone;
+                    toUpdate.Phone = customer.Phone.Replace(" ", "").Trim();
                     var updatedCustomer = await _repository.Update(toUpdate);
                     return _mapper.Map<CustomerDto>(updatedCustomer);
 
@@ -104,6 +105,7 @@ namespace Data.Services
                 {
                     var insert = _mapper.Map<Customer>(customer);
                     var newCustomer = await _repository.Add(insert);
+                    newCustomer.Phone = newCustomer.Phone.Replace(" ", "").Trim();
                     return _mapper.Map<CustomerDto>(newCustomer);
                 }
 

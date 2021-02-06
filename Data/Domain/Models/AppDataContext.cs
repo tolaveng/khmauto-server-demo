@@ -56,6 +56,8 @@ namespace Data.Domain.Models
             modelBuilder.Entity<ServiceIndex>()
                 .HasKey(z => z.ServiceName);
 
+            modelBuilder.Entity<Invoice>()
+                .HasIndex(z => z.InvoiceNo).IsUnique();
         }
 
     }

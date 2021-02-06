@@ -61,7 +61,8 @@ namespace KHMAuto.Controllers
             try
             {
                 await _companyService.Update(company);
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 return Json(ResponseResult<string>.Fail("Failed"));
             }

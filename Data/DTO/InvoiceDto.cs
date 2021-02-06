@@ -8,6 +8,7 @@ namespace Data.DTO
     public class InvoiceDto
     {
         public long InvoiceId { get; set; }
+        public long InvoiceNo { get; set; }
         public DateTime InvoiceDateTime { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         public bool IsPaid { get; set; }

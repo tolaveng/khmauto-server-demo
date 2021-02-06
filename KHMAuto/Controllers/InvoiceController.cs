@@ -34,6 +34,19 @@ namespace KHMAuto.Controllers
             return Ok();
         }
 
+
+        [HttpGet("getbyno")]
+        public async Task<ActionResult<InvoiceDto>> GetByNo([FromBody] NoRequest noRequest)
+        {
+            var invoice = await _invoiceService.GetByNo(noRequest.No);
+            if (invoice != null)
+            {
+                return Json(invoice);
+            }
+            return Ok();
+        }
+
+
         [HttpGet("getall")]
         public async Task<ActionResult<InvoiceDto>> GetAll([FromBody] PageRequest pageRequest)
         {
