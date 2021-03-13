@@ -23,32 +23,32 @@ namespace KHMAuto.Controllers
         }
 
 
-        [HttpGet("getbyid")]
-        public async Task<ActionResult<InvoiceDto>> GetById([FromBody] IdRequest idRequest)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<InvoiceDto>> GetById(long id)
         {
-            var invoice = await _invoiceService.GetById(idRequest.id);
+            var invoice = await _invoiceService.GetById(id);
             if (invoice != null)
             {
                 return Json(invoice);
             }
-            return Ok();
+            return NoContent();
         }
 
 
-        [HttpGet("getbyno")]
-        public async Task<ActionResult<InvoiceDto>> GetByNo([FromBody] NoRequest noRequest)
+        [HttpGet("no/{no}")]
+        public async Task<ActionResult<InvoiceDto>> GetByNo(long no)
         {
-            var invoice = await _invoiceService.GetByNo(noRequest.No);
+            var invoice = await _invoiceService.GetByNo(no);
             if (invoice != null)
             {
                 return Json(invoice);
             }
-            return Ok();
+            return NoContent();
         }
 
 
         [HttpGet("getall")]
-        public async Task<ActionResult<InvoiceDto>> GetAll([FromBody] PageRequest pageRequest)
+        public async Task<ActionResult<InvoiceDto>> GetAll([FromQuery]PageRequest pageRequest)
         {
             var pageQuery = new PaginationQuery()
             {

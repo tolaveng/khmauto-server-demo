@@ -1,22 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
+using System.Text;
 using AutoMapper;
 using Data.Api.Services;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.Mapper;
 using Data.Services;
+using KHMAuto.Configures;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace KHMAuto
 {
@@ -43,6 +43,60 @@ namespace KHMAuto
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader();
+                    });
+            });
+
+            // Identity
+            IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+            {
+                // easy password
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 3;
+                opt.Password.RequireLowercase = false;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+
+            });
+            builder = new IdentityBuilder(builder.UserType, typeof(UserRole), builder.Services);
+            builder.AddSignInManager<SignInManager<User>>();
+            builder.AddRoleManager<RoleManager<UserRole>>();
+            builder.AddRoleValidator<RoleValidator<UserRole>>();
+            builder.AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
+
+
+            // JWT
+            var jwtTokenConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
+            services.AddSingleton(jwtTokenConfig);
+
+            services.AddAuthentication(opt => {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(opt =>
+                {
+                    opt.RequireHttpsMetadata = false;
+                    opt.SaveToken = true; // save to HttpContext
+                    opt.TokenValidationParameters = new TokenValidationParameters {
+                        NameClaimType = ClaimTypes.NameIdentifier,
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtTokenConfig.Issuer,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
+                        ValidateAudience = true,
+                        ValidAudience = jwtTokenConfig.Audience,
+                        ValidateLifetime = true
+                };
+            });
+
             // Add Repositories
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
@@ -63,8 +117,6 @@ namespace KHMAuto
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IServiceIndexService, ServiceIndexService>();
             services.AddScoped<IUserService, UserService>();
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -78,7 +130,9 @@ namespace KHMAuto
             // app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseCors("AllowAll");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -15,7 +15,9 @@ namespace KHMAuto.Requests
         public string Password { get; set; }
 
         public string FullName { get; set; }
-        
+
+        public string Email { get; set; }
+
         public bool isAdmin { get; set; }
         
         public UserRequest() { }

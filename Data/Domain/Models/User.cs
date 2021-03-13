@@ -1,19 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace Data.Domain.Models
 {
-    public class User
+    public class User: IdentityUser<int>
     {
-        public int UserId { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
         public string FullName { get; set; }
         public bool isAdmin { get; set; }
-
-        public User() { }
 
     }
 }

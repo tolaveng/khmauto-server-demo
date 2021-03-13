@@ -79,7 +79,11 @@ namespace Data.Domain.Repositories
         public async Task<IEnumerable<Invoice>> GetAllPaged(PaginationFilter pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await context.Invoices.Where(z => !z.Archived).OrderByDescending(z => z.InvoiceId)
+            return await context.Invoices.Where(z => !z.Archived)
+                .OrderByDescending(z => z.InvoiceId)
+                .Include(z => z.Customer)
+                .Include(z => z.Car)
+                .AsNoTracking()
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 

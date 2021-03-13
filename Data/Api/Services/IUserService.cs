@@ -11,7 +11,8 @@ namespace Data.Api.Services
         public Task<UserDto> GetByUsername(string username);
         public Task<IEnumerable<UserDto>> GetAll();
         public Task<UserDto> GetById(int id);
-        public Task AddUser(UserDto user);
+        public Task Register(UserDto user);
+        public Task<UserDto> SignIn(UserDto user);
         public Task UpdateUser(UserDto user);
     }
 }

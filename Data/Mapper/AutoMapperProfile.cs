@@ -19,7 +19,6 @@ namespace Data.Mapper
             CreateMap<Invoice, InvoiceDto>();
             CreateMap<Service, ServiceDto>();
             CreateMap<ServiceIndex, ServiceIndexDto>();
-            CreateMap<User, UserDto>();
             CreateMap<Quote, QuoteDto>();
 
             // Dto
@@ -35,6 +34,14 @@ namespace Data.Mapper
             // Others
             CreateMap<PaginationQuery, PaginationFilter>();
             CreateMap<PaginationFilter, PaginationQuery>();
+
+            //
+            CreateMap<User, UserDto>()
+                .ForMember(x => x.Username, m => m.MapFrom(z => z.UserName))
+                .ForMember(x => x.Password, m => m.MapFrom(z => ""))
+                .ForMember(x => x.UserId, m => m.MapFrom(z => z.Id))
+                ;
+                
         }
     }
 }

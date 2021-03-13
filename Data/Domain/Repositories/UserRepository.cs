@@ -29,22 +29,22 @@ namespace Data.Domain.Repositories
 
         public async Task<User> GetById(int userId)
         {
-            return await context.Users.SingleOrDefaultAsync(z => z.UserId == userId);
+            return await context.Users.SingleOrDefaultAsync(z => z.Id == userId);
         }
 
         public async Task<User> GetByUsername(string userName)
         {
-            return await context.Users.FirstOrDefaultAsync(z => z.Username.Equals(userName));
+            return await context.Users.FirstOrDefaultAsync(z => z.UserName.Equals(userName));
         }
 
         public async Task UpdateUser(User user)
         {
             var change = context.Users.Attach(user);
 
-            if (string.IsNullOrEmpty(user.Password))
-            {
-                context.Entry(user).Property(z => z.Password).IsModified = false;
-            }
+            //if (string.IsNullOrEmpty(user.Password))
+            //{
+            //    //context.Entry(user).Property(z => z.Password).IsModified = false;
+            //}
 
             change.State = EntityState.Modified;
             await context.SaveChangesAsync();

@@ -23,9 +23,9 @@ namespace KHMAuto.Controllers
         }
 
 
-        // api/user/createuser
-        [HttpPost("createuser")]
-        public async Task<ActionResult> CreateUser([FromBody] UserRequest user)
+        // api/user/register
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] UserRequest user)
         {
             if (user == null || string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
             {
@@ -35,16 +35,18 @@ namespace KHMAuto.Controllers
                 FullName = user.FullName,
                 Password = user.Password,
                 Username = user.Username,
+                Email = user.Email,
                 isAdmin = true
             };
             try
             {
-                await _userService.AddUser(newUser);
+                await _userService.Register(newUser);
             }catch(Exception ex)
             {
                 return Json(ResponseResult<string>.Fail(ex.Message));
             }
-            return Ok();
+            var response = ResponseResult<bool>.Success("", true);
+            return Json(response);
         }
 
 
@@ -66,30 +68,30 @@ namespace KHMAuto.Controllers
         public async Task<ActionResult<UserDto>> GetUser(int id)
         {
             var user = await _userService.GetById(id);
-            if (user == null)
+            if (user != null)
             {
-                return null;
+                user.Password = string.Empty;
+                var response = ResponseResult<UserDto>.Success("Get user successful", user);
+                return Json(response);
             }
-            user.Password = string.Empty;
-            return user;
+            return Json(ResponseResult<string>.Fail("Get user failed"));
         }
 
 
         [HttpPost("login")]
         public async Task<ActionResult<ResponseResult<string>>> Login([FromBody] UserRequest user)
         {
-            var dbUser = await _userService.GetByUsername(user.Username);
-            if (dbUser == null)
+            var signInUser = await _userService.SignIn(new UserDto() { 
+                Username = user.Username,
+                Password = user.Password
+            });
+            if (signInUser != null)
             {
-                return Json(ResponseResult<string>.Fail("Login failed")); ;
-            }
-            if (UserService.IsPasswordMatch(user.Password, dbUser.Password))
-            {
-                dbUser.Password = string.Empty;
-                return Json(ResponseResult<string>.Success("Login successfully"));
+                var response = ResponseResult<UserDto>.Success("Sign in successful", signInUser);
+                return Json(response);
             }
             
-            return Json(ResponseResult<string>.Fail("Login failed")); ;
+            return Json(ResponseResult<string>.Fail("Login failed"));
         }
     }
 }
