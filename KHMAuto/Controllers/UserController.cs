@@ -49,6 +49,28 @@ namespace KHMAuto.Controllers
             return Json(response);
         }
 
+        [HttpPost("update")]
+        public async Task<ActionResult<ResponseResult<string>>> Update([FromBody] UserRequest user)
+        {
+            var updateUser = new UserDto()
+            {
+                Username = user.Username,
+                FullName = user.FullName,
+                Email = user.Email,
+                Password = user.Password,
+            };
+            try
+            {
+                await _userService.UpdateUser(updateUser, user.NewPassword);
+                return Json(ResponseResult<bool>.Success("", true));
+
+            } catch (Exception ex)
+            {
+                return Json(ResponseResult<string>.Fail("Update failed", ex.Message));
+            }
+            return Json(ResponseResult<string>.Fail("Update failed"));
+        }
+
 
         [HttpGet("getusers")]
         public async Task<JsonResult> GetUsers()

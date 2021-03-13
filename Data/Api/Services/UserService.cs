@@ -13,27 +13,17 @@ namespace Data.Api.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _repository;
+ 
         private readonly IMapper _mapper;
-
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
 
-        public static string HashPassword(string password)
-        {
-            return password;
-        }
 
-        public static bool IsPasswordMatch(string password, string hashPassword)
-        {
-            return HashPassword(password).Equals(hashPassword);
-        }
-
-        public UserService(IUserRepository repository, IMapper mapper, UserManager<User> userManager,SignInManager<User> signInManager)
+        public UserService(IMapper mapper, UserManager<User> userManager,SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _repository = repository;
+
             _mapper = mapper;
 
         }
@@ -77,25 +67,32 @@ namespace Data.Api.Services
             return null;
         }
 
-        public async Task UpdateUser(UserDto user)
+        public async Task UpdateUser(UserDto user, string newPassword = null)
         {
-            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.FullName))
+            if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.FullName) || string.IsNullOrWhiteSpace(user.Password))
             {
                 throw new ArgumentException("User information is required");
             }
-            var updateUser = await _repository.GetByUsername(user.Username);
-            if (updateUser == null)
+            var checkUser = await _userManager.FindByNameAsync(user.Username);
+            if (checkUser == null)
             {
                 throw new InvalidOperationException("User is not found");
             }
-            //updateUser.Username = user.Username;
-            updateUser.FullName = user.FullName;
-            
-            if (!string.IsNullOrWhiteSpace(user.Password))
+
+            var result = await _signInManager.CheckPasswordSignInAsync(checkUser, user.Password, false);
+            if (!result.Succeeded)
             {
-                //updateUser.Password = HashPassword(user.Password);
+                throw new InvalidOperationException("User password is not matched");
             }
-            await _repository.UpdateUser(updateUser);
+
+            checkUser.FullName = user.FullName;
+            checkUser.Email = user.Email;
+
+            if (!string.IsNullOrWhiteSpace(newPassword))
+            {
+                checkUser.PasswordHash = _userManager.PasswordHasher.HashPassword(checkUser, newPassword);
+            }
+            await _userManager.UpdateAsync(checkUser);
         }
 
         public async Task<UserDto> GetByUsername(string username)

@@ -13,6 +13,6 @@ namespace Data.Api.Services
         public Task<UserDto> GetById(int id);
         public Task Register(UserDto user);
         public Task<UserDto> SignIn(UserDto user);
-        public Task UpdateUser(UserDto user);
+        public Task UpdateUser(UserDto user, string newPassword = null);
     }
 }
