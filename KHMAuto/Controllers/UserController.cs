@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Data.Api.Services;
 using Data.DTO;
 using KHMAuto.Requests;
 using KHMAuto.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,6 +26,7 @@ namespace KHMAuto.Controllers
 
 
         // api/user/register
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] UserRequest user)
         {
@@ -49,8 +52,10 @@ namespace KHMAuto.Controllers
             return Json(response);
         }
 
+
+        [Authorize]
         [HttpPost("update")]
-        public async Task<ActionResult<ResponseResult<string>>> Update([FromBody] UserRequest user)
+        public async Task<ActionResult> Update([FromBody] UserRequest user)
         {
             var updateUser = new UserDto()
             {
@@ -68,10 +73,9 @@ namespace KHMAuto.Controllers
             {
                 return Json(ResponseResult<string>.Fail("Update failed", ex.Message));
             }
-            return Json(ResponseResult<string>.Fail("Update failed"));
         }
 
-
+        [Authorize]
         [HttpGet("getusers")]
         public async Task<JsonResult> GetUsers()
         {
@@ -85,23 +89,23 @@ namespace KHMAuto.Controllers
             return Json(results);
         }
 
-
+        [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetUser(int id)
+        public async Task<ActionResult> GetUser(int id)
         {
             var user = await _userService.GetById(id);
             if (user != null)
             {
                 user.Password = string.Empty;
                 var response = ResponseResult<UserDto>.Success("Get user successful", user);
-                return Json(response);
+                return Ok(response);
             }
-            return Json(ResponseResult<string>.Fail("Get user failed"));
+            return BadRequest(ResponseResult<string>.Fail("Get user failed"));
         }
 
-
+        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult<ResponseResult<string>>> Login([FromBody] UserRequest user)
+        public async Task<ActionResult> Login([FromBody] UserRequest user)
         {
             var signInUser = await _userService.SignIn(new UserDto() { 
                 Username = user.Username,
@@ -113,7 +117,22 @@ namespace KHMAuto.Controllers
                 return Json(response);
             }
             
-            return Json(ResponseResult<string>.Fail("Login failed"));
+            return BadRequest(ResponseResult<string>.Fail("Login failed"));
+        }
+
+        [Authorize]
+        [HttpGet("currentuser")]
+        public async Task<ActionResult> CurrentUser()
+        {
+            var username = HttpContext.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrWhiteSpace(username)) return Unauthorized();
+
+            var user = await _userService.GetByUsername(username);
+            if (user != null)
+            {
+                return Json(user);
+            }
+            return Unauthorized();
         }
     }
 }

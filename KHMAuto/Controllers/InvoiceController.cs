@@ -24,7 +24,7 @@ namespace KHMAuto.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<InvoiceDto>> GetById(long id)
+        public async Task<ActionResult> GetById(long id)
         {
             var invoice = await _invoiceService.GetById(id);
             if (invoice != null)
@@ -36,7 +36,7 @@ namespace KHMAuto.Controllers
 
 
         [HttpGet("no/{no}")]
-        public async Task<ActionResult<InvoiceDto>> GetByNo(long no)
+        public async Task<ActionResult> GetByNo(long no)
         {
             var invoice = await _invoiceService.GetByNo(no);
             if (invoice != null)
@@ -48,7 +48,7 @@ namespace KHMAuto.Controllers
 
 
         [HttpGet("getall")]
-        public async Task<ActionResult<InvoiceDto>> GetAll([FromQuery]PageRequest pageRequest)
+        public async Task<ActionResult> GetAll([FromQuery]PageRequest pageRequest)
         {
             var pageQuery = new PaginationQuery()
             {

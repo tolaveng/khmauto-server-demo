@@ -1,12 +1,11 @@
 ﻿using AutoMapper;
 using Data.Domain.Models;
-using Data.Domain.Repositories;
 using Data.DTO;
+using Data.Interfaces;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Api.Services
@@ -17,16 +16,17 @@ namespace Data.Api.Services
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IJwtGenerator _jwtGenerator;
 
-
-        public UserService(IMapper mapper, UserManager<User> userManager,SignInManager<User> signInManager)
+        public UserService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-
+            _jwtGenerator = jwtGenerator;
             _mapper = mapper;
 
         }
+
 
         public async Task Register(UserDto user)
         {
@@ -53,6 +53,7 @@ namespace Data.Api.Services
             }
         }
 
+
         public async Task<UserDto> SignIn(UserDto user)
         {
             var checkUser = await _userManager.FindByNameAsync(user.Username);
@@ -61,12 +62,15 @@ namespace Data.Api.Services
                 var result = await _signInManager.CheckPasswordSignInAsync(checkUser, user.Password, false);
                 if (result.Succeeded)
                 {
-                    return _mapper.Map<UserDto>(checkUser);
+                    var userDto = _mapper.Map<UserDto>(checkUser);
+                    userDto.JwtToken = _jwtGenerator.CreateToken(checkUser);
+                    return userDto;
                 }
             }
             return null;
         }
 
+        
         public async Task UpdateUser(UserDto user, string newPassword = null)
         {
             if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.FullName) || string.IsNullOrWhiteSpace(user.Password))
@@ -95,20 +99,21 @@ namespace Data.Api.Services
             await _userManager.UpdateAsync(checkUser);
         }
 
+
         public async Task<UserDto> GetByUsername(string username)
         {
-            //var user = await _repository.GetByUsername(username);
-            //var user = await _userManager.Users.FirstOrDefaultAsync(user => user.UserName.Equals(username, StringComparison.OrdinalIgnoreCase));
             var user = await _userManager.FindByNameAsync(username);
             if (user == null) return null;
             return _mapper.Map<UserDto>(user);
         }
+
 
         public async Task<IEnumerable<UserDto>> GetAll()
         {
             var users = await _userManager.Users.ToListAsync();
             return _mapper.Map<IEnumerable<UserDto>>(users);
         }
+
 
         public async Task<UserDto> GetById(int id)
         {

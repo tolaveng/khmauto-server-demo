@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KHMAuto", "KHMAuto\KHMAuto.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{58FAAC34-890D-4B62-B1D4-38E79E55C124}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{FFE99D93-C0D1-4EE4-8FB9-420006083722}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58FAAC34-890D-4B62-B1D4-38E79E55C124}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFE99D93-C0D1-4EE4-8FB9-420006083722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFE99D93-C0D1-4EE4-8FB9-420006083722}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFE99D93-C0D1-4EE4-8FB9-420006083722}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFE99D93-C0D1-4EE4-8FB9-420006083722}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

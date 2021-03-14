@@ -1,17 +1,19 @@
 using System;
-using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using Data.Api.Services;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
+using Data.Interfaces;
 using Data.Mapper;
 using Data.Services;
-using KHMAuto.Configures;
+using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,16 +34,19 @@ namespace KHMAuto
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
-
-            services.AddDbContextPool<AppDataContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("PostgresDatabase")));
-
-            services.AddAutoMapper(typeof(AutoMapperProfile));
-
-            services.AddControllers().AddNewtonsoftJson(options =>
+            // JSON Format
+            services.AddControllers(opt =>
+            {
+                // All end points are required authentication
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            })
+                .AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            //services.AddControllers()
+            //.AddJsonOptions(options =>
+            //   options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
             services.AddCors(options =>
             {
@@ -55,8 +60,10 @@ namespace KHMAuto
                     });
             });
 
+
+
             // Identity
-            IdentityBuilder builder = services.AddIdentityCore<User>(opt =>
+            IdentityBuilder identityBuilder = services.AddIdentityCore<User>(opt =>
             {
                 // easy password
                 opt.Password.RequireDigit = false;
@@ -66,16 +73,16 @@ namespace KHMAuto
                 opt.Password.RequireUppercase = false;
 
             });
-            builder = new IdentityBuilder(builder.UserType, typeof(UserRole), builder.Services);
-            builder.AddSignInManager<SignInManager<User>>();
-            builder.AddRoleManager<RoleManager<UserRole>>();
-            builder.AddRoleValidator<RoleValidator<UserRole>>();
-            builder.AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
+            identityBuilder = new IdentityBuilder(identityBuilder.UserType, typeof(UserRole), identityBuilder.Services);
+            identityBuilder.AddSignInManager<SignInManager<User>>();
+            identityBuilder.AddRoleManager<RoleManager<UserRole>>();
+            identityBuilder.AddRoleValidator<RoleValidator<UserRole>>();
+            identityBuilder.AddEntityFrameworkStores<AppDataContext>().AddDefaultTokenProviders();
 
 
             // JWT
-            var jwtTokenConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtTokenConfig>();
-            services.AddSingleton(jwtTokenConfig);
+            var jwtConfig = Configuration.GetSection("JwtTokenConfig").Get<JwtConfig>();
+            services.AddSingleton(jwtConfig);
 
             services.AddAuthentication(opt => {
                 opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -86,16 +93,24 @@ namespace KHMAuto
                     opt.RequireHttpsMetadata = false;
                     opt.SaveToken = true; // save to HttpContext
                     opt.TokenValidationParameters = new TokenValidationParameters {
-                        NameClaimType = ClaimTypes.NameIdentifier,
-                        ValidateIssuer = true,
-                        ValidIssuer = jwtTokenConfig.Issuer,
                         ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtTokenConfig.Secret)),
-                        ValidateAudience = true,
-                        ValidAudience = jwtTokenConfig.Audience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig.Secret)),
+
+                        //NameClaimType = ClaimTypes.NameIdentifier,
+                        ValidateIssuer = false,
+                        //ValidIssuer = jwtTokenConfig.Issuer,
+                        ValidateAudience = false,
+                        //ValidAudience = jwtTokenConfig.Audience,
                         ValidateLifetime = true
                 };
             });
+
+
+            // Data
+            services.AddDbContextPool<AppDataContext>(options =>
+            options.UseNpgsql(Configuration.GetConnectionString("PostgresDatabase")));
+            services.AddAutoMapper(typeof(AutoMapperProfile));
+
 
             // Add Repositories
             services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -116,6 +131,7 @@ namespace KHMAuto
             services.AddScoped<IServiceService, ServiceService>();
             services.AddScoped<IServiceIndexService, ServiceIndexService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
