@@ -4,6 +4,7 @@ using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
+using Data.Enums;
 using Data.Services;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,24 @@ namespace Data.Api.Services
             }
 
             var newInvoice = _mapper.Map<Invoice>(invoice);
+            if (newInvoice.InvoiceDateTime == null)
+            {
+                newInvoice.InvoiceDateTime = DateTime.Now.ToUniversalTime();
+            }
+            newInvoice.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            var isPaid = newInvoice.PaymentMethod != PaymentMethod.Unpaid;
+            if (isPaid)
+            {
+                newInvoice.IsPaid = isPaid;
+                newInvoice.PaidDate = DateTime.Now.ToUniversalTime();
+            }
+
+            // make auto increment
+            foreach(var service in newInvoice.Services)
+            {
+                if (service.ServiceId < 1) service.ServiceId = 0;
+            }
+
             using (var transaction = await _transactionRepository.BeginTransaction())
             {
                 try
@@ -115,6 +134,13 @@ namespace Data.Api.Services
             }
 
             var updateInvoice = _mapper.Map<Invoice>(invoice);
+            updateInvoice.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            // make auto increment
+            foreach (var service in updateInvoice.Services)
+            {
+                if (service.ServiceId < 1) service.ServiceId = 0;
+            }
+
             using (var transaction = await _transactionRepository.BeginTransaction())
             {
                 try
@@ -124,6 +150,7 @@ namespace Data.Api.Services
                     {
                         throw new ArgumentException("Invoice Id is not found.");
                     }
+                    
                     await _invoiceRepository.Update(updateInvoice);
                 }
                 catch (Exception ex)

@@ -2,6 +2,7 @@
 using Data.Domain.Models;
 using Data.DTO;
 using Data.Interfaces;
+using Data.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -34,16 +35,16 @@ namespace Data.Api.Services
             {
                 throw new ArgumentException("User information is required");
             }
-            var existedUser = await _userManager.FindByNameAsync(user.Username);
+            var existedUser = await _userManager.FindByNameAsync(user.Username.CleanText());
             if (existedUser != null)
             {
                 throw new ArgumentException("Username is already existed");
             }
             var newUser = new User()
             {
-                UserName = user.Username,
+                UserName = user.Username.CleanText(),
                 FullName = user.FullName,
-                Email = user.Email,
+                Email = user.Email.CleanText(),
                 isAdmin = user.isAdmin
             };
             var result = await _userManager.CreateAsync(newUser, user.Password);

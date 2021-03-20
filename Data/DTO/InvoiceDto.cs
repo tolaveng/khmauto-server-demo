@@ -36,7 +36,7 @@ namespace Data.DTO
         public ICollection<ServiceDto> Services { get; set; }
 
         public InvoiceDto() {
-            Gst = 0.1f;
+            Gst = 10;
             Archived = false;
             this.Services = new HashSet<ServiceDto>();
         }

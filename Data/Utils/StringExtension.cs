@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Data.Utils
@@ -11,7 +9,7 @@ namespace Data.Utils
         {
             if (string.IsNullOrWhiteSpace(str)) return string.Empty;
 
-            return Regex.Replace(str, "\\s+\\-", "").Trim();
+            return Regex.Replace(str, @"[^\w]", "").Trim();
         }
     }
 }
