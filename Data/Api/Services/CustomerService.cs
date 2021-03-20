@@ -4,6 +4,7 @@ using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
+using Data.Utils;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -97,7 +98,7 @@ namespace Data.Services
                     toUpdate.Abn = customer.Abn;
                     toUpdate.Address = customer.Address;
                     toUpdate.Email = customer.Email;
-                    toUpdate.Phone = customer.Phone.Replace(" ", "").Trim();
+                    toUpdate.Phone = customer.Phone.CleanText();
                     var updatedCustomer = await _repository.Update(toUpdate);
                     return _mapper.Map<CustomerDto>(updatedCustomer);
 
@@ -105,7 +106,7 @@ namespace Data.Services
                 {
                     var insert = _mapper.Map<Customer>(customer);
                     var newCustomer = await _repository.Add(insert);
-                    newCustomer.Phone = newCustomer.Phone.Replace(" ", "").Trim();
+                    newCustomer.Phone = newCustomer.Phone.CleanText();
                     return _mapper.Map<CustomerDto>(newCustomer);
                 }
 
