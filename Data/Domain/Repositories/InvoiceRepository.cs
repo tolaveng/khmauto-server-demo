@@ -1,6 +1,7 @@
 ﻿using Data.Api.Common;
 using Data.Domain.Common;
 using Data.Domain.Models;
+using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,6 @@ namespace Data.Domain.Repositories
         {
             return await context.Invoices
                     .Include(z => z.Services)
-                    .Include(z => z.Customer)
                     .Include(z => z.Car)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(z => z.InvoiceId == id);
@@ -52,7 +52,6 @@ namespace Data.Domain.Repositories
         {
             return await context.Invoices
                 .Include(z => z.Services)
-                .Include(z => z.Customer)
                 .Include(z => z.Car)
                 .AsNoTracking()
                 .SingleOrDefaultAsync(z => z.InvoiceNo == no);
@@ -81,7 +80,6 @@ namespace Data.Domain.Repositories
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Invoices.Where(z => !z.Archived)
                 .OrderByDescending(z => z.InvoiceId)
-                .Include(z => z.Customer)
                 .Include(z => z.Car)
                 .AsNoTracking()
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
@@ -93,8 +91,8 @@ namespace Data.Domain.Repositories
             return await context.Invoices.Where(z => !z.Archived &&
                 (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
             )
                 .OrderByDescending(z => z.CarId)
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
@@ -106,8 +104,8 @@ namespace Data.Domain.Repositories
             return await context.Invoices.Where(z => !z.Archived &&
                 (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
             ).CountAsync();
         }
 

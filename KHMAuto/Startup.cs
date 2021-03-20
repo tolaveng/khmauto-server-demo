@@ -116,7 +116,6 @@ namespace KHMAuto
             services.AddScoped<ITransactionRepository, TransactionRepository>();
             services.AddScoped<ICarRepository, CarRepository>();
             services.AddScoped<ICompanyRepository, CompanyRepository>();
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
             services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             services.AddScoped<IQuoteRepository, QuoteRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
@@ -125,7 +124,6 @@ namespace KHMAuto
             // Add Services
             services.AddScoped<ICarService, CarService>();
             services.AddScoped<ICompanyService, CompanyService>();
-            services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IInvoiceService, InvoiceService>();
             services.AddScoped<IQuoteService, QuoteService>();
             services.AddScoped<IServiceService, ServiceService>();

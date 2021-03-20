@@ -17,20 +17,17 @@ namespace Data.Api.Services
         private readonly IMapper _mapper;
         private readonly IInvoiceRepository _invoiceRepository;
         private readonly IServiceRepository _serviceRepository;
-        private readonly ICustomerService _customerService;
         private readonly ICarService _carService;
         private readonly ITransactionRepository _transactionRepository;
 
         public InvoiceService(IInvoiceRepository invoiceRepository,
             IServiceRepository serviceRepository,
-            ICustomerService customerService,
             ICarService carService,
             ITransactionRepository transactionRepository,
             IMapper mapper)
         {
             _invoiceRepository = invoiceRepository;
             _serviceRepository = serviceRepository;
-            _customerService = customerService;
             _carService = carService;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
@@ -51,10 +48,6 @@ namespace Data.Api.Services
                     var maxInvoiceNo = await _invoiceRepository.GetMaxInvoiceNo();
                     newInvoice.InvoiceNo = maxInvoiceNo + 1;
 
-                    var customer = await _customerService.CreateOrUpdate(invoice.Customer);
-                    newInvoice.CustomerId = customer.CustomerId;
-                    newInvoice.Customer = null;
-                    
                     var car = await _carService.CreateOrUpdate(invoice.Car);
                     newInvoice.CarId = car.CarId;
                     newInvoice.Car = null;

@@ -1,11 +1,11 @@
 ﻿using Data.Api.Common;
 using Data.Domain.Common;
 using Data.Domain.Models;
+using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
@@ -50,8 +50,8 @@ namespace Data.Domain.Repositories
             return await context.Quotes.Where(z => z.QuoteId > 0 &&
                 (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
             )
                 .OrderByDescending(z => z.QuoteId)
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
@@ -80,8 +80,8 @@ namespace Data.Domain.Repositories
             return await context.Quotes.Where(z => z.QuoteId > 0 &&
                 (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
                 (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.Customer.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone) || z.Customer.Phone.Contains(query.CustomerPhone))
+                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
+                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
             ).CountAsync();
         }
     }

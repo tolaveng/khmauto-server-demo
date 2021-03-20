@@ -15,7 +15,6 @@ namespace Data.Mapper
         {
             CreateMap<Car, CarDto>();
             CreateMap<Company, CompanyDto>();
-            CreateMap<Customer, CustomerDto>();
             CreateMap<Invoice, InvoiceDto>();
             CreateMap<Service, ServiceDto>();
             CreateMap<ServiceIndex, ServiceIndexDto>();
@@ -24,7 +23,6 @@ namespace Data.Mapper
             // Dto
             CreateMap<CarDto, Car>();
             CreateMap<CompanyDto, Company>();
-            CreateMap<CustomerDto, Customer>();
             CreateMap<InvoiceDto, Invoice>();
             CreateMap<ServiceDto, Service>();
             CreateMap<ServiceIndexDto, ServiceIndex>();

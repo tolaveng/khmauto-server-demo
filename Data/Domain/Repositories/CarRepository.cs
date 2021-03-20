@@ -1,5 +1,6 @@
 ﻿using Data.Domain.Common;
 using Data.Domain.Models;
+using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Data.Domain.Repositories
 
         public async Task<Car> Add(Car car)
         {
+            car.PlateNo = car.PlateNo.CleanText().ToUpper();
             await context.Cars.AddAsync(car);
             await context.SaveChangesAsync();
             return car;
@@ -40,11 +42,12 @@ namespace Data.Domain.Repositories
 
         public async Task<Car> GetByPlateNo(string PlateNo)
         {
-            return await context.Cars.FirstOrDefaultAsync(z => z.PlateNo.ToUpper().Equals(PlateNo.ToUpper()));
+            return await context.Cars.FirstOrDefaultAsync(z => z.PlateNo.ToUpper().Equals(PlateNo.CleanText().ToUpper()));
         }
 
         public async Task<Car> Update(Car car)
         {
+            car.PlateNo = car.PlateNo.CleanText().ToUpper();
             var change = context.Cars.Attach(car);
             change.State = EntityState.Modified;
             await context.SaveChangesAsync();
@@ -61,7 +64,7 @@ namespace Data.Domain.Repositories
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
 
-            return await context.Cars.Where(z => z.PlateNo.ToUpper().Contains(PlateNo.ToUpper()))
+            return await context.Cars.Where(z => z.PlateNo.ToUpper().Contains(PlateNo.CleanText().ToUpper()))
                 .Skip(skip).Take(pagination.PageSize)
                 .ToListAsync();
         }

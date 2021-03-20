@@ -4,6 +4,7 @@ using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
+using Data.Utils;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -81,7 +82,7 @@ namespace Data.Services
             else
             {
                 Car toUpdate = null;
-                if (!string.IsNullOrWhiteSpace(car.PlateNo))
+                if (!string.IsNullOrWhiteSpace(car.PlateNo.CleanText()))
                 {
                     toUpdate = await _repository.GetByPlateNo(car.PlateNo);
                 }

@@ -21,8 +21,12 @@ namespace Data.DTO
         public long CarId { get; set; }
         public CarDto Car { get; set; }
 
-        public long CustomerId { get; set; }
-        public CustomerDto Customer { get; set; }
+        public string FullName { get; set; }
+        public string Company { get; set; }
+        public string Phone { get; set; }
+        public string Email { get; set; }
+        public string Address { get; set; }
+        public string Abn { get; set; }
 
         public int UserId { get; set; }
 

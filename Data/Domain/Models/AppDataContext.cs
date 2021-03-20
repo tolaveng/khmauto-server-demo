@@ -14,7 +14,6 @@ namespace Data.Domain.Models
 
         public DbSet<Car> Cars { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<Customer> Customers { get; set; }
         public DbSet<Service> Services { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Quote> Quotes { get; set; }
@@ -33,17 +32,6 @@ namespace Data.Domain.Models
             modelBuilder.Entity<Car>()
                 .HasMany(z => z.Quotes)
                 .WithOne(z => z.Car);
-
-
-            modelBuilder.Entity<Customer>()
-                .HasMany(z => z.Invoices)
-                .WithOne(z => z.Customer);
-
-
-            modelBuilder.Entity<Customer>()
-                .HasMany(z => z.Quotes)
-                .WithOne(z => z.Customer);
-
 
             modelBuilder.Entity<Service>()
                 .HasOne(z => z.Invoice)
