@@ -44,14 +44,14 @@ namespace Data.Api.Services
             var newInvoice = _mapper.Map<Invoice>(invoice);
             if (newInvoice.InvoiceDateTime == null)
             {
-                newInvoice.InvoiceDateTime = DateTime.Now.ToUniversalTime();
+                newInvoice.InvoiceDateTime = DateTime.Now;
             }
-            newInvoice.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            newInvoice.ModifiedDateTime = DateTime.Now;
             var isPaid = newInvoice.PaymentMethod != PaymentMethod.Unpaid;
             if (isPaid)
             {
                 newInvoice.IsPaid = isPaid;
-                newInvoice.PaidDate = DateTime.Now.ToUniversalTime();
+                newInvoice.PaidDate = DateTime.Now;
             }
 
             // make auto increment
@@ -134,7 +134,7 @@ namespace Data.Api.Services
             }
 
             var updateInvoice = _mapper.Map<Invoice>(invoice);
-            updateInvoice.ModifiedDateTime = DateTime.Now.ToUniversalTime();
+            updateInvoice.ModifiedDateTime = DateTime.Now;
             // make auto increment
             foreach (var service in updateInvoice.Services)
             {

@@ -61,6 +61,21 @@ namespace Data.Domain.Repositories
         {
             var change = context.Invoices.Attach(invoice);
             change.State = EntityState.Modified;
+
+            // update service
+            foreach (var service in invoice.Services)
+            {
+                if (service.ServiceId > 0)
+                {
+                    context.Entry(service).State = EntityState.Modified;
+                }
+            }
+
+            // delete service
+            var serviceIds = invoice.Services.Select(x => x.ServiceId).ToArray();
+            var deleteServices = context.Services.Where(x => x.InvoiceId == invoice.InvoiceId && !serviceIds.Contains(x.ServiceId));
+            context.Services.RemoveRange(deleteServices);
+
             await context.SaveChangesAsync();
             return invoice;
         }
