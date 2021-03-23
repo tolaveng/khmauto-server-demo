@@ -34,7 +34,7 @@ namespace Data.Api.Services
             _mapper = mapper;
         }
 
-        public async Task Create(InvoiceDto invoice)
+        public async Task<InvoiceDto> Create(InvoiceDto invoice)
         {
             if (invoice.UserId == 0)
             {
@@ -79,7 +79,8 @@ namespace Data.Api.Services
                     throw ex;
                 }          
                 await transaction.CommitAsync();
-            }   
+            }
+            return _mapper.Map<InvoiceDto>(newInvoice);
         }
 
 

@@ -13,7 +13,7 @@ namespace Data.Api.Services
         Task<InvoiceDto> GetByNo(long no);
         Task<PaginationResponse<InvoiceDto>> GetAllPaged(PaginationQuery pagination);
         Task<PaginationResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query);
-        Task Create(InvoiceDto invoice);
+        Task<InvoiceDto> Create(InvoiceDto invoice);
         Task Archive(long id);
         Task Update(InvoiceDto invoice);
     }

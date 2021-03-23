@@ -23,10 +23,11 @@ namespace Data.Api.Services
 
         }
 
-        public async Task Add(QuoteDto quote)
+        public async Task<QuoteDto> Create(QuoteDto quote)
         {
             var insert = _mapper.Map<Quote>(quote);
-            await _repository.Add(insert);
+            var newQuote = await _repository.Add(insert);
+            return _mapper.Map<QuoteDto>(newQuote);
         }
 
         public async Task Delete(long id)

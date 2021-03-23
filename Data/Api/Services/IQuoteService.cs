@@ -11,7 +11,7 @@ namespace Data.Api.Services
     {
         Task<PaginationResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination);
         Task<PaginationResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query);
-        Task Add(QuoteDto quote);
+        Task<QuoteDto> Create(QuoteDto quote);
         Task Delete(long id);
         Task Update(QuoteDto quote);
     }

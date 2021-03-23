@@ -89,9 +89,9 @@ namespace Data.Services
                 
                 if (toUpdate != null)
                 {
-                    toUpdate.CarModel = car.CarModel.Trim();
-                    toUpdate.PlateNo = car.PlateNo.Trim();
-                    toUpdate.CarMake = car.CarMake;
+                    toUpdate.CarModel = car.CarModel.CleanText();
+                    toUpdate.PlateNo = car.PlateNo.CleanText();
+                    toUpdate.CarMake = car.CarMake.CleanText();
                     toUpdate.CarYear = car.CarYear;
                     toUpdate.ODO = car.ODO;
                     

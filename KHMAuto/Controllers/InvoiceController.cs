@@ -67,21 +67,24 @@ namespace KHMAuto.Controllers
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] InvoiceDto invoice)
         {
-            var response = new ResponseResult<string>();
             try
             {
-                await _invoiceService.Create(invoice);
+                var newInvoice = await _invoiceService.Create(invoice);
+                var response = new ResponseResult<InvoiceDto>();
+                response.success = true;
+                response.message = "";
+                response.data = newInvoice;
+                return Json(response);
             }
             catch(Exception e)
             {
+                var response = new ResponseResult<string>();
                 response.success = false;
                 response.message = "Unable to create new invoice";
+                response.debugMessage = e.Message;
                 Console.WriteLine(e.ToString());
                 return Json(response);
             }
-            response.success = true;
-            response.message = "";
-            return Json(response);
         }
 
 
