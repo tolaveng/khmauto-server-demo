@@ -20,34 +20,30 @@ namespace Data.Domain.Repositories
 
         public async Task<Car> Add(Car car)
         {
-            car.PlateNo = car.PlateNo.CleanText().ToUpper();
+            car.CarNo = car.CarNo.CleanText().ToUpper();
             await context.Cars.AddAsync(car);
             await context.SaveChangesAsync();
             return car;
         }
 
-        public async Task<bool> Delete(long id)
+        public async Task<bool> Delete(string carNo)
         {
-            var car = context.Cars.FirstOrDefault(z => z.CarId == id);
+            var car = context.Cars.FirstOrDefault(z => z.CarNo == carNo);
             if (car == null) return false;
             context.Cars.Remove(car);
             await context.SaveChangesAsync();
             return true;
         }
 
-        public async Task<Car> GetById(long id)
-        {
-            return await context.Cars.FindAsync(id);
-        }
 
-        public async Task<Car> GetByPlateNo(string PlateNo)
+        public async Task<Car> GetByCarNo(string carNo)
         {
-            return await context.Cars.FirstOrDefaultAsync(z => z.PlateNo.ToUpper().Equals(PlateNo.CleanText().ToUpper()));
+            return await context.Cars.FirstOrDefaultAsync(z => z.CarNo.ToUpper().Equals(carNo.CleanText().ToUpper()));
         }
 
         public async Task<Car> Update(Car car)
         {
-            car.PlateNo = car.PlateNo.CleanText().ToUpper();
+            car.CarNo = car.CarNo.CleanText().ToUpper();
             var change = context.Cars.Attach(car);
             change.State = EntityState.Modified;
             await context.SaveChangesAsync();
@@ -60,11 +56,11 @@ namespace Data.Domain.Repositories
             return await context.Cars.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
-        public async Task<IEnumerable<Car>> FindByPlateNoPaged(string PlateNo, PaginationFilter pagination)
+        public async Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationFilter pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
 
-            return await context.Cars.Where(z => z.PlateNo.ToUpper().Contains(PlateNo.CleanText().ToUpper()))
+            return await context.Cars.Where(z => z.CarNo.ToUpper().Contains(carNo.CleanText().ToUpper()))
                 .Skip(skip).Take(pagination.PageSize)
                 .ToListAsync();
         }

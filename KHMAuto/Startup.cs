@@ -7,6 +7,8 @@ using Data.Domain.Repositories;
 using Data.Interfaces;
 using Data.Mapper;
 using Data.Services;
+using DinkToPdf;
+using DinkToPdf.Contracts;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -108,7 +110,9 @@ namespace KHMAuto
 
             // Data
             services.AddDbContextPool<AppDataContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("PostgresDatabase")));
+            //    options.UseNpgsql(Configuration.GetConnectionString("PostgresDd"))
+                options.UseMySql(Configuration.GetConnectionString("MariaDb"))
+            );
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
 
@@ -130,6 +134,9 @@ namespace KHMAuto
             services.AddScoped<IServiceIndexService, ServiceIndexService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+
+            // Pdf
+            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

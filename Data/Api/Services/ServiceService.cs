@@ -70,9 +70,9 @@ namespace Data.Api.Services
             await _repository.Update(update);
         }
 
-        public async Task<IEnumerable<ServiceDto>> GetByCarId(long carId)
+        public async Task<IEnumerable<ServiceDto>> GetByCarNo(string carNo)
         {
-            var invoices = await _invoiceRepository.GetByCarId(carId);
+            var invoices = await _invoiceRepository.GetByCarNo(carNo);
             var result = new List<ServiceDto>();
             foreach(var invoice in invoices)
             {

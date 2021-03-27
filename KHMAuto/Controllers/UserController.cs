@@ -28,9 +28,12 @@ namespace KHMAuto.Controllers
         // api/user/register
         [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> Register([FromBody] UserRequest user)
+        public async Task<ActionResult> Register([FromBody] UserRegisterRequest user)
         {
-            if (user == null || string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.Password))
+            if (user == null || string.IsNullOrWhiteSpace(user.Username) ||
+                string.IsNullOrWhiteSpace(user.Password) ||
+                user.RegisterSecret != "T0LA"
+                )
             {
                 return BadRequest();
             }
@@ -39,7 +42,7 @@ namespace KHMAuto.Controllers
                 Password = user.Password,
                 Username = user.Username,
                 Email = user.Email,
-                isAdmin = true
+                isAdmin = user.IsAdmin
             };
             try
             {
@@ -55,7 +58,7 @@ namespace KHMAuto.Controllers
 
         [Authorize]
         [HttpPost("update")]
-        public async Task<ActionResult> Update([FromBody] UserRequest user)
+        public async Task<ActionResult> Update([FromBody] UserRegisterRequest user)
         {
             var updateUser = new UserDto()
             {
@@ -80,13 +83,7 @@ namespace KHMAuto.Controllers
         public async Task<JsonResult> GetUsers()
         {
             var users = await _userService.GetAll();
-            var results = users.Select(z => new UserRequest() {
-                UserId = z.UserId,
-                FullName = z.FullName,
-                Username = z.Username,
-                isAdmin = z.isAdmin
-            }).ToArray();
-            return Json(results);
+            return Json(users);
         }
 
         [Authorize]
@@ -105,7 +102,7 @@ namespace KHMAuto.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> Login([FromBody] UserRequest user)
+        public async Task<ActionResult> Login([FromBody] UserRegisterRequest user)
         {
             var signInUser = await _userService.SignIn(new UserDto() { 
                 Username = user.Username,

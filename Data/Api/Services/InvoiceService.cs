@@ -68,7 +68,7 @@ namespace Data.Api.Services
                     newInvoice.InvoiceNo = maxInvoiceNo + 1;
 
                     var car = await _carService.CreateOrUpdate(invoice.Car);
-                    newInvoice.CarId = car.CarId;
+                    newInvoice.CarNo = car.CarNo;
                     newInvoice.Car = null;
                     
                     newInvoice = await _invoiceRepository.Add(newInvoice);

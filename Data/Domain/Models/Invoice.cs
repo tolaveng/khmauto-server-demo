@@ -18,7 +18,7 @@ namespace Data.Domain.Models
         public string Note { get; set; }
         public long ODO { get; set; }
 
-        public long CarId { get; set; }
+        public string CarNo { get; set; }
         public virtual Car Car { get; set; }
 
         public string FullName { get; set; }

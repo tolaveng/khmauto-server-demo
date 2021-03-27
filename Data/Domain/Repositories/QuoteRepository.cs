@@ -48,7 +48,7 @@ namespace Data.Domain.Repositories
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Quotes.Where(z => z.QuoteId > 0 &&
-                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
+                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
                 (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
@@ -78,7 +78,7 @@ namespace Data.Domain.Repositories
         public async Task<long> GetCountByQuery(InvoiceQuery query)
         {
             return await context.Quotes.Where(z => z.QuoteId > 0 &&
-                (string.IsNullOrWhiteSpace(query.PlateNo) || z.Car.PlateNo.Contains(query.PlateNo)) &&
+                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
                 (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
                 (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))

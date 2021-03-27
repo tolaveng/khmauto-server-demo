@@ -9,7 +9,7 @@ namespace Data.Api.Services
     public interface IServiceService
     {
         Task<IEnumerable<ServiceDto>> GetByInvoiceId(long invoicId);
-        Task<IEnumerable<ServiceDto>> GetByCarId(long carId);
+        Task<IEnumerable<ServiceDto>> GetByCarNo(string carNo);
         Task<ServiceDto> GetById(long id);
         Task<ServiceDto> GetByName(string name);
         Task Add(ServiceDto service);

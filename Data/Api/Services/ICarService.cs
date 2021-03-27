@@ -10,11 +10,10 @@ namespace Data.Services
     public interface ICarService
     {
         Task<PaginationResponse<CarDto>> GetAllPaged(PaginationQuery pagination);
-        Task<PaginationResponse<CarDto>> FindByPlateNoPaged(string PlateNo, PaginationQuery pagination);
-        Task<CarDto> GetById(long id);
-        Task<CarDto> GetByPlateNo(string PlateNo);
+        Task<PaginationResponse<CarDto>> FindByCarNoPaged(string carNo, PaginationQuery pagination);
+        Task<CarDto> GetByCarNo(string carNo);
         Task Add(CarDto car);
-        Task Delete(long id);
+        Task Delete(string carNo);
         Task Update(CarDto car);
         Task<CarDto> CreateOrUpdate(CarDto car);
     }

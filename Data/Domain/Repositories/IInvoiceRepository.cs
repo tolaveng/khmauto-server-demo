@@ -20,6 +20,6 @@ namespace Data.Domain.Repositories
         public Task<long> GetCount();
         public Task<long> GetMaxInvoiceNo();
         public Task<long> GetCountByQuery(InvoiceQuery query);
-        public Task<IEnumerable<Invoice>> GetByCarId(long carId);
+        public Task<IEnumerable<Invoice>> GetByCarNo(string carNo);
     }
 }

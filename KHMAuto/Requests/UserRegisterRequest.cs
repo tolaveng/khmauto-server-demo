@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace KHMAuto.Requests
 {
-    public class UserRequest
+    public class UserRegisterRequest
     {
         public int UserId { get; set; }
         [Required]
@@ -18,10 +18,12 @@ namespace KHMAuto.Requests
 
         public string Email { get; set; }
 
-        public bool isAdmin { get; set; }
+        public bool IsAdmin { get; set; }
 
         public string NewPassword { get; set; }
 
-        public UserRequest() { }
+        public string RegisterSecret { get; set; }
+
+        public UserRegisterRequest() { }
     }
 }

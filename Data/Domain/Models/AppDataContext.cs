@@ -25,13 +25,13 @@ namespace Data.Domain.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Car>()
-                .HasMany(z => z.Invoices)
-                .WithOne(z => z.Car);
+            modelBuilder.Entity<Car>().HasKey(z => z.CarNo);
 
-            modelBuilder.Entity<Car>()
-                .HasMany(z => z.Quotes)
-                .WithOne(z => z.Car);
+            modelBuilder.Entity<Invoice>()
+                .HasOne(z => z.Car).WithMany(z => z.Invoices).HasForeignKey(z => z.CarNo);
+
+            modelBuilder.Entity<Quote>()
+                .HasOne(z => z.Car).WithMany(z => z.Quotes);
 
             modelBuilder.Entity<Service>()
                 .HasOne(z => z.Invoice)
