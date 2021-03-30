@@ -24,5 +24,11 @@ namespace Data.Api.Services
             var services = await _repository.FindByServiceName(serviceName);
             return _mapper.Map<IEnumerable<ServiceIndexDto>>(services);
         }
+
+        public async Task<IEnumerable<ServiceIndexDto>> GetAll(int limit)
+        {
+            var services = await _repository.GetAll(limit);
+            return _mapper.Map<IEnumerable<ServiceIndexDto>>(services);
+        }
     }
 }

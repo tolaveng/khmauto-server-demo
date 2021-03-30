@@ -9,6 +9,8 @@ namespace Data.Domain.Models
     {
         public long ServiceId { get; set; }
         public string ServiceName { get; set; }
+
+        [Column(TypeName = "decimal(8, 2)")]
         public decimal ServicePrice { get; set; }
         public int ServiceQty { get; set; }
 

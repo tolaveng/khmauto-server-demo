@@ -45,6 +45,12 @@ namespace Data.Domain.Models
             modelBuilder.Entity<ServiceIndex>()
                 .HasKey(z => z.ServiceName);
 
+            // use data annotation
+            //modelBuilder.Entity<ServiceIndex>()
+            //    .Property(z => z.ServicePrice)
+            //    .HasColumnType("decimal(8,2)");
+                //.HasPrecision(8, 2); EF 5
+
             modelBuilder.Entity<Invoice>()
                 .HasIndex(z => z.InvoiceNo).IsUnique();
         }

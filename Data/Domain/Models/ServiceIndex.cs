@@ -10,6 +10,8 @@ namespace Data.Domain.Models
     {
         [Key]
         public string ServiceName { get; set; }
+
+        [Column(TypeName = "decimal(8, 2)")]
         public Decimal ServicePrice { get; set; }
 
         public ServiceIndex()

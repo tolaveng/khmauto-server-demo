@@ -9,5 +9,6 @@ namespace Data.Api.Services
     public interface IServiceIndexService
     {
         Task<IEnumerable<ServiceIndexDto>> FindByServiceName(string serviceName);
+        Task<IEnumerable<ServiceIndexDto>> GetAll(int limit);
     }
 }

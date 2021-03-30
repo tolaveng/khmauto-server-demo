@@ -18,20 +18,29 @@ namespace Data.Domain.Repositories
 
         public async Task AddOrUpdateService(string serviceName, decimal price)
         {
-            var service = await GetService(serviceName);
-            if (service != null)
+            try
             {
-                service.ServicePrice = price;
-                context.ServiceIndexs.Update(service);
-            } else
+                var service = await GetService(serviceName);
+                if (service != null)
+                {
+                    service.ServicePrice = price;
+                    context.ServiceIndexs.Update(service);
+                }
+                else
+                {
+                    service = new ServiceIndex()
+                    {
+                        ServiceName = serviceName.Trim(),
+                        ServicePrice = price
+                    };
+                    await context.ServiceIndexs.AddAsync(service);
+                }
+                await context.SaveChangesAsync();
+
+            } catch(Exception)
             {
-                service = new ServiceIndex() {
-                    ServiceName = serviceName.Trim(),
-                    ServicePrice = price
-                };
-                await context.ServiceIndexs.AddAsync(service);
+                //ignored
             }
-            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName)
@@ -42,6 +51,11 @@ namespace Data.Domain.Repositories
         public async Task<ServiceIndex> GetService(string serviceName)
         {
             return await context.ServiceIndexs.SingleOrDefaultAsync(z => z.ServiceName.Equals(serviceName.Trim(), StringComparison.OrdinalIgnoreCase));
+        }
+
+        public async Task<IEnumerable<ServiceIndex>> GetAll(int limit)
+        {
+            return await context.ServiceIndexs.Take(limit).ToListAsync();
         }
     }
 }

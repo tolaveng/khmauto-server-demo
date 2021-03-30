@@ -17,11 +17,13 @@ namespace KHMAuto.Controllers
     [ApiController]
     public class InvoiceController : Controller
     {
-        private IInvoiceService _invoiceService;
+        private readonly IInvoiceService _invoiceService;
+        private readonly IServiceIndexService _serviceIndexService;
 
-        public InvoiceController(IInvoiceService invoiceService)
+        public InvoiceController(IInvoiceService invoiceService, IServiceIndexService serviceIndexService)
         {
             _invoiceService = invoiceService;
+            _serviceIndexService = serviceIndexService;
         }
 
 
@@ -109,6 +111,18 @@ namespace KHMAuto.Controllers
             response.success = true;
             response.message = "";
             return Json(response);
+        }
+
+
+        [HttpGet("getserviceindex")]
+        public async Task<ActionResult> GetServiceIndex()
+        {
+            var response = await _serviceIndexService.GetAll(100);
+            if (response != null)
+            {
+                return Json(response);
+            }
+            return Ok();
         }
 
 

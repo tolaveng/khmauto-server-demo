@@ -20,11 +20,13 @@ namespace Data.Api.Services
         private readonly IServiceRepository _serviceRepository;
         private readonly ICarService _carService;
         private readonly ITransactionRepository _transactionRepository;
+        private readonly IServiceIndexRepository _serviceIndexRepository;
 
         public InvoiceService(IInvoiceRepository invoiceRepository,
             IServiceRepository serviceRepository,
             ICarService carService,
             ITransactionRepository transactionRepository,
+            IServiceIndexRepository serviceIndexRepository,
             IMapper mapper)
         {
             _invoiceRepository = invoiceRepository;
@@ -32,6 +34,7 @@ namespace Data.Api.Services
             _carService = carService;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
+            _serviceIndexRepository = serviceIndexRepository;
         }
 
         public async Task<InvoiceDto> Create(InvoiceDto invoice)
@@ -72,6 +75,13 @@ namespace Data.Api.Services
                     newInvoice.Car = null;
                     
                     newInvoice = await _invoiceRepository.Add(newInvoice);
+
+                    // update service index for auto complete
+                    foreach (var ser in newInvoice.Services)
+                    {
+                        await _serviceIndexRepository.AddOrUpdateService(ser.ServiceName, ser.ServicePrice);
+                    }
+
                 }
                 catch(Exception ex)
                 {
