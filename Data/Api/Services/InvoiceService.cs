@@ -54,7 +54,7 @@ namespace Data.Api.Services
                 newInvoice.PaidDate = DateTime.Now;
             }
 
-            // make auto increment
+            // make auto increment, new service is negative (-)
             foreach(var service in newInvoice.Services)
             {
                 if (service.ServiceId < 1) service.ServiceId = 0;
@@ -152,6 +152,11 @@ namespace Data.Api.Services
                         throw new ArgumentException("Invoice Id is not found.");
                     }
                     
+                    // No track Cars
+                    var car = await _carService.CreateOrUpdate(invoice.Car);
+                    updateInvoice.CarNo = car.CarNo;
+                    updateInvoice.Car = null;
+
                     await _invoiceRepository.Update(updateInvoice);
                 }
                 catch (Exception ex)

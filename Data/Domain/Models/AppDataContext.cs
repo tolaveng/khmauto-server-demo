@@ -31,7 +31,7 @@ namespace Data.Domain.Models
                 .HasOne(z => z.Car).WithMany(z => z.Invoices).HasForeignKey(z => z.CarNo);
 
             modelBuilder.Entity<Quote>()
-                .HasOne(z => z.Car).WithMany(z => z.Quotes);
+                .HasOne(z => z.Car).WithMany(z => z.Quotes).HasForeignKey(z => z.CarNo);
 
             modelBuilder.Entity<Service>()
                 .HasOne(z => z.Invoice)

@@ -18,7 +18,7 @@ namespace Data.DTO
         public string Note { get; set; }
         public long ODO { get; set; }
 
-        public long CarNo { get; set; }
+        public string CarNo { get; set; }
         public CarDto Car { get; set; }
 
         public string FullName { get; set; }

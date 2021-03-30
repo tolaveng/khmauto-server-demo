@@ -5,6 +5,7 @@ using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
 using Data.Utils;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -69,24 +70,20 @@ namespace Data.Services
         public async Task<CarDto> CreateOrUpdate(CarDto car)
         {
             if (string.IsNullOrWhiteSpace(car.CarNo))
+                throw new ArgumentException("Car No is empty");
+            
+           var update = await _repository.GetByCarNo(car.CarNo);
+           if (update == null)
             {
                 var insert = _mapper.Map<Car>(car);
                 var newCar = await _repository.Add(insert);
                 return _mapper.Map<CarDto>(newCar);
             }
-            else
-            {
-                var update = await _repository.GetByCarNo(car.CarNo);
-                if (update == null)
-                {
-                    var insert = _mapper.Map<Car>(car);
-                    var newCar = await _repository.Add(insert);
-                    return _mapper.Map<CarDto>(newCar);
-                }
-                update = _mapper.Map<Car>(car);
-                var updated = await _repository.Update(update);
-                return _mapper.Map<CarDto>(updated);
-            }
+
+            update = _mapper.Map<Car>(car);
+            var updated = await _repository.Update(update);
+            return _mapper.Map<CarDto>(updated);
+            
         }
     }
 }

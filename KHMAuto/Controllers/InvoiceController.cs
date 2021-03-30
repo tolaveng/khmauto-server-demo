@@ -83,7 +83,7 @@ namespace KHMAuto.Controllers
                 var response = new ResponseResult<string>();
                 response.success = false;
                 response.message = "Unable to create new invoice";
-                response.debugMessage = e.Message;
+                response.debugMessage = $"{e.Message} {e.StackTrace}";
                 Console.WriteLine(e.ToString());
                 return Json(response);
             }
@@ -102,7 +102,8 @@ namespace KHMAuto.Controllers
             {
                 response.success = false;
                 response.message = "Unable to update invoice";
-                Console.WriteLine(e.ToString());
+                response.debugMessage = $"{e.Message} {e.StackTrace}";
+
                 return Json(response);
             }
             response.success = true;

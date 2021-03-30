@@ -44,8 +44,16 @@ namespace Data.Domain.Repositories
         public async Task<Car> Update(Car car)
         {
             car.CarNo = car.CarNo.CleanText().ToUpper();
+
+            var local = await context.Set<Car>().FirstOrDefaultAsync(z => z.CarNo == car.CarNo);
+            if (local != null)
+            {
+                context.Entry(local).State = EntityState.Detached;
+            }
+
             var change = context.Cars.Attach(car);
             change.State = EntityState.Modified;
+            
             await context.SaveChangesAsync();
             return car;
         }

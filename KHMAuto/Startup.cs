@@ -7,8 +7,6 @@ using Data.Domain.Repositories;
 using Data.Interfaces;
 using Data.Mapper;
 using Data.Services;
-using DinkToPdf;
-using DinkToPdf.Contracts;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -135,8 +133,6 @@ namespace KHMAuto
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
 
-            // Pdf
-            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
