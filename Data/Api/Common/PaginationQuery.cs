@@ -9,6 +9,10 @@ namespace Data.Api.Common
         public int PageNumber { get; set; }
         public int PageSize { get; set; }
 
+        public string SortBy { get; set; }
+
+        public string SortDir { get; set; }
+
         public PaginationQuery() { }
 
         public PaginationQuery(int pageNumber, int pageSize) {

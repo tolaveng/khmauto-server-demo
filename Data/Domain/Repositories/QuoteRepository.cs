@@ -1,7 +1,5 @@
 ﻿using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
-using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -37,7 +35,7 @@ namespace Data.Domain.Repositories
             return false;
         }
 
-        public async Task<IEnumerable<Quote>> GetAllPaged(PaginationFilter pagination)
+        public async Task<IEnumerable<Quote>> GetAllPaged(PaginationQuery pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Quotes.OrderByDescending(z => z.QuoteId)
@@ -77,7 +75,7 @@ namespace Data.Domain.Repositories
             return queryable;
         }
 
-        public async Task<IEnumerable<Quote>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
+        public async Task<IEnumerable<Quote>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await GetQueryable(query).OrderByDescending(z => z.QuoteId).Skip(skip).Take(pagination.PageSize).ToListAsync();

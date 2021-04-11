@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
@@ -37,21 +36,19 @@ namespace Data.Api.Services
 
         public async Task<PaginationResponse<QuoteDto>> GetAllPaged(PaginationQuery pagination)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCount();
-            var quotes = await _repository.GetAllPaged(paginationFilter);
+            var quotes = await _repository.GetAllPaged(pagination);
             var data = _mapper.Map<List<QuoteDto>>(quotes);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<QuoteDto>(data, totalCount, hasNext, pagination);
         }
 
         public async Task<PaginationResponse<QuoteDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCountByQuery(query);
-            var quotes = await _repository.GetByQuery(paginationFilter, query);
+            var quotes = await _repository.GetByQuery(pagination, query);
             var data = _mapper.Map<List<QuoteDto>>(quotes);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<QuoteDto>(data, totalCount, hasNext, pagination);
         }
 

@@ -1,4 +1,4 @@
-﻿using Data.Domain.Common;
+﻿using Data.Api.Common;
 using Data.Domain.Models;
 using Data.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -58,13 +58,21 @@ namespace Data.Domain.Repositories
             return car;
         }
 
-        public async Task<IEnumerable<Car>> GetAllPaged(PaginationFilter pagination)
+        public async Task<IEnumerable<Car>> GetAllPaged(PaginationQuery pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await context.Cars.Skip(skip).Take(pagination.PageSize).ToListAsync();
+            var queryable = context.Cars.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(pagination.SortDir) && pagination.SortDir == "DESC")
+            {
+                queryable = queryable.OrderByDescending(z => z.CarNo);
+            } else
+            {
+                queryable = queryable.OrderBy(z => z.CarNo);
+            }
+            return await queryable.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
-        public async Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationFilter pagination)
+        public async Task<IEnumerable<Car>> FindByCarNoPaged(string carNo, PaginationQuery pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
 

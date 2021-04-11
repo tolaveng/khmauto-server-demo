@@ -1,13 +1,10 @@
 ﻿using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
-using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
@@ -90,7 +87,7 @@ namespace Data.Domain.Repositories
             return await context.Invoices.Where(z => z.Car.CarNo == carNo).ToListAsync();
         }
 
-        public async Task<IEnumerable<Invoice>> GetAllPaged(PaginationFilter pagination)
+        public async Task<IEnumerable<Invoice>> GetAllPaged(PaginationQuery pagination)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Invoices.Where(z => !z.Archived)
@@ -136,7 +133,7 @@ namespace Data.Domain.Repositories
             return queryable;
         }
 
-        public async Task<IEnumerable<Invoice>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
+        public async Task<IEnumerable<Invoice>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             var queryable = GetQueryable(query);

@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
 using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
-using Data.Utils;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace Data.Services
 {
@@ -36,11 +35,10 @@ namespace Data.Services
 
         public async Task<PaginationResponse<CarDto>> GetAllPaged(PaginationQuery pagination)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _repository.GetCount();
-            var cars = await _repository.GetAllPaged(paginationFilter);
+            var cars = await _repository.GetAllPaged(pagination);
             var data = _mapper.Map<List<CarDto>>(cars);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<CarDto>(data, totalCount, hasNext, pagination);
         }
 
@@ -53,11 +51,10 @@ namespace Data.Services
 
         public async Task<PaginationResponse<CarDto>> FindByCarNoPaged(string carNo, PaginationQuery pagination)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
-            var cars = await _repository.FindByCarNoPaged(carNo, paginationFilter);
-            var totalCount = await _repository.GetCount();
+            var cars = await _repository.FindByCarNoPaged(carNo, pagination);
+            var totalCount = cars.Count();
             var data = _mapper.Map<List<CarDto>>(cars);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<CarDto>(data, totalCount, hasNext, pagination);
         }
 

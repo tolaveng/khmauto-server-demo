@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.DTO;
@@ -102,11 +101,10 @@ namespace Data.Api.Services
 
         public async Task<PaginationResponse<InvoiceDto>> GetAllPaged(PaginationQuery pagination)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _invoiceRepository.GetCount();
-            var invoices = await _invoiceRepository.GetAllPaged(paginationFilter);
+            var invoices = await _invoiceRepository.GetAllPaged(pagination);
             var data = _mapper.Map<List<InvoiceDto>>(invoices);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
 
@@ -129,11 +127,10 @@ namespace Data.Api.Services
 
         public async Task<PaginationResponse<InvoiceDto>> GetByQuery(PaginationQuery pagination, InvoiceQuery query)
         {
-            var paginationFilter = _mapper.Map<PaginationFilter>(pagination);
             var totalCount = await _invoiceRepository.GetCountByQuery(query);
-            var invoices = await _invoiceRepository.GetByQuery(paginationFilter, query);
+            var invoices = await _invoiceRepository.GetByQuery(pagination, query);
             var data = _mapper.Map<List<InvoiceDto>>(invoices);
-            var hasNext = (paginationFilter.PageNumber * paginationFilter.PageSize) < totalCount;
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<InvoiceDto>(data, totalCount, hasNext, pagination);
         }
 

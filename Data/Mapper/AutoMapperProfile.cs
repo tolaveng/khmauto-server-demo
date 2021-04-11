@@ -1,11 +1,7 @@
 ﻿using AutoMapper;
-using Data.Api.Common;
-using Data.Domain.Common;
 using Data.Domain.Models;
 using Data.DTO;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Data.Mapper
 {
@@ -27,12 +23,7 @@ namespace Data.Mapper
             CreateMap<UserDto, User>();
             CreateMap<QuoteDto, Quote>();
 
-            // Others
-            CreateMap<PaginationQuery, PaginationFilter>();
-            CreateMap<PaginationFilter, PaginationQuery>();
-
-
-
+            
             // mapping
             CreateMap<Invoice, InvoiceDto>()
                 .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => z.InvoiceDate.ToString("yyyy-MM-dd")))
