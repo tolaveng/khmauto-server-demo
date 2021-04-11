@@ -11,6 +11,10 @@ namespace KHMAuto.Requests
         public string CarNo { get; set; }
         public string Customer { get; set; }
         public string InvoiceDate { get; set; }
-        
+
+        public string SortBy { get; set; }
+
+        public string SortDir { get; set; }
+
     }
 }

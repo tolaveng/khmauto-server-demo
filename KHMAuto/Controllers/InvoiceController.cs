@@ -72,6 +72,8 @@ namespace KHMAuto.Controllers
                     }
                     query.InvoiceDate = parsedDate;
                 };
+                query.SortBy = filter.SortBy;
+                query.SortDir = filter.SortDir;
             }
             var response = await _invoiceService.GetByQuery(pageQuery, query);
             if (response != null)

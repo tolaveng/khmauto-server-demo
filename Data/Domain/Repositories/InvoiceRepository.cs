@@ -139,7 +139,27 @@ namespace Data.Domain.Repositories
         public async Task<IEnumerable<Invoice>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await GetQueryable(query).OrderByDescending(z => z.InvoiceNo).Skip(skip).Take(pagination.PageSize).ToListAsync();
+            var queryable = GetQueryable(query);
+            if (!string.IsNullOrWhiteSpace(query.SortBy))
+            {
+                if (query.SortBy.Equals("CarNo", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryable = query.SortDir == "ASC" ? queryable.OrderBy(z => z.CarNo) : queryable.OrderByDescending(z => z.CarNo);
+                }
+                else if (query.SortBy.Equals("InvoiceNo", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryable = query.SortDir == "ASC" ? queryable.OrderBy(z => z.InvoiceNo) : queryable.OrderByDescending(z => z.InvoiceNo);
+                }
+                else if (query.SortBy.Equals("InvoiceDate", StringComparison.OrdinalIgnoreCase))
+                {
+                    queryable = query.SortDir == "ASC" ? queryable.OrderBy(z => z.InvoiceDate) : queryable.OrderByDescending(z => z.InvoiceDate);
+                }
+            }
+            else
+            {
+                queryable = queryable.OrderByDescending(z => z.InvoiceNo);
+            }
+            return await queryable.Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
         

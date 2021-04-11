@@ -60,6 +60,11 @@ namespace Data.Domain.Repositories
 
             if (query.InvoiceDate != null)
             {
+                // make time to mid night 23.59 PM
+                if (query.InvoiceDate.TimeOfDay == TimeSpan.Zero)
+                {
+                    query.InvoiceDate = query.InvoiceDate.AddDays(1).AddMinutes(-1);
+                }
                 queryable = queryable.Where(z => z.QuoteDate <= query.InvoiceDate);
             }
 

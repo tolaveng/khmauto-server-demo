@@ -10,5 +10,8 @@ namespace Data.Api.Common
         public string CarNo { get; set; }
         public DateTime InvoiceDate { get; set; }
         public string Customer { get; set; }
+
+        public string SortBy { get; set; }
+        public string SortDir { get; set; }
     }
 }
