@@ -15,7 +15,6 @@ namespace Data.Mapper
         {
             CreateMap<Car, CarDto>();
             CreateMap<Company, CompanyDto>();
-            CreateMap<Invoice, InvoiceDto>();
             CreateMap<Service, ServiceDto>();
             CreateMap<ServiceIndex, ServiceIndexDto>();
             CreateMap<Quote, QuoteDto>();
@@ -23,7 +22,6 @@ namespace Data.Mapper
             // Dto
             CreateMap<CarDto, Car>();
             CreateMap<CompanyDto, Company>();
-            CreateMap<InvoiceDto, Invoice>();
             CreateMap<ServiceDto, Service>();
             CreateMap<ServiceIndexDto, ServiceIndex>();
             CreateMap<UserDto, User>();
@@ -33,7 +31,31 @@ namespace Data.Mapper
             CreateMap<PaginationQuery, PaginationFilter>();
             CreateMap<PaginationFilter, PaginationQuery>();
 
-            //
+
+
+            // mapping
+            CreateMap<Invoice, InvoiceDto>()
+                .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => z.InvoiceDate.ToString("yyyy-MM-dd")))
+                ;
+
+
+            Func<string, DateTime> InvoiceStringDateTime = delegate (string stringDate)
+            {
+                {
+                    if (DateTime.TryParse(stringDate, out var result))
+                    {
+                        if (result.Kind == DateTimeKind.Utc)
+                            result = result.ToLocalTime();
+                        return result.Date;
+                    }
+                    return default;
+                }
+            };
+
+            CreateMap<InvoiceDto, Invoice>()
+                .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => InvoiceStringDateTime(z.InvoiceDate)));
+
+
             CreateMap<User, UserDto>()
                 .ForMember(x => x.Username, m => m.MapFrom(z => z.UserName))
                 .ForMember(x => x.Password, m => m.MapFrom(z => ""))

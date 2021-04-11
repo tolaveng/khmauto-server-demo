@@ -44,17 +44,38 @@ namespace Data.Domain.Repositories
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
+        public IQueryable<Quote> GetQueryable(InvoiceQuery query)
+        {
+            var queryable = context.Quotes.Include(z => z.Car).AsQueryable();
+            
+            if (!string.IsNullOrWhiteSpace(query.CarNo))
+            {
+                queryable = queryable.Where(z => z.Car.CarNo.Contains(query.CarNo));
+            }
+
+            if (query.InvoiceNo != 0)
+            {
+                queryable = queryable.Where(z => z.QuoteId == query.InvoiceNo);
+            }
+
+            if (query.InvoiceDate != null)
+            {
+                queryable = queryable.Where(z => z.QuoteDate <= query.InvoiceDate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Customer))
+            {
+                queryable = queryable.Where(z => z.FullName.Contains(query.Customer, StringComparison.OrdinalIgnoreCase) || z.Phone.Contains(query.Customer));
+            }
+
+            
+            return queryable;
+        }
+
         public async Task<IEnumerable<Quote>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await context.Quotes.Where(z => z.QuoteId > 0 &&
-                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
-                (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
-            )
-                .OrderByDescending(z => z.QuoteId)
-                .Skip(skip).Take(pagination.PageSize).ToListAsync();
+            return await GetQueryable(query).OrderByDescending(z => z.QuoteId).Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
         public async Task<Quote> GetById(long id)
@@ -77,12 +98,7 @@ namespace Data.Domain.Repositories
 
         public async Task<long> GetCountByQuery(InvoiceQuery query)
         {
-            return await context.Quotes.Where(z => z.QuoteId > 0 &&
-                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
-                (query.DateTime == null || z.QuoteDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
-            ).CountAsync();
+            return await GetQueryable(query).CountAsync();
         }
     }
 }

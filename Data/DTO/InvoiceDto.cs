@@ -9,10 +9,10 @@ namespace Data.DTO
     {
         public long InvoiceId { get; set; }
         public long InvoiceNo { get; set; }
-        public DateTime InvoiceDateTime { get; set; }
-        public DateTime ModifiedDateTime { get; set; }
+        public string InvoiceDate { get; set; }
+        public string ModifiedDateTime { get; set; }
         public bool IsPaid { get; set; }
-        public DateTime PaidDate { get; set; }
+        public string PaidDate { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public float Gst { get; set; }
         public string Note { get; set; }

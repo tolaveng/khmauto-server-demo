@@ -6,9 +6,9 @@ namespace Data.Api.Common
 {
     public class InvoiceQuery
     {
+        public long InvoiceNo { get; set; }
         public string CarNo { get; set; }
-        public DateTime DateTime { get; set; }
-        public string CustomerName { get; set; }
-        public string CustomerPhone { get; set; }
+        public DateTime InvoiceDate { get; set; }
+        public string Customer { get; set; }
     }
 }

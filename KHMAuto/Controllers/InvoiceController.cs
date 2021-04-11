@@ -52,14 +52,28 @@ namespace KHMAuto.Controllers
 
 
         [HttpGet("getall")]
-        public async Task<ActionResult> GetAll([FromQuery]PageRequest pageRequest)
+        public async Task<ActionResult> GetAll([FromQuery]PageRequest pageRequest, [FromQuery] InvoiceFilter filter = null)
         {
             var pageQuery = new PaginationQuery()
             {
                 PageNumber = pageRequest.PageNumber,
                 PageSize = pageRequest.PageSize
             };
-            var response = await _invoiceService.GetAllPaged(pageQuery);
+            var query = new InvoiceQuery();
+            if (filter != null)
+            {
+                query.InvoiceNo = long.TryParse(filter.InvoiceNo, out var pInvoiceNo) ? pInvoiceNo :  0;
+                query.CarNo = filter.CarNo ?? "";
+                query.Customer = filter.Customer ?? "";
+                if (DateTime.TryParse(filter.InvoiceDate, out var parsedDate)) {
+                    if (parsedDate.Kind == DateTimeKind.Utc)
+                    {
+                        parsedDate = parsedDate.ToLocalTime().Date;
+                    }
+                    query.InvoiceDate = parsedDate;
+                };
+            }
+            var response = await _invoiceService.GetByQuery(pageQuery, query);
             if (response != null)
             {
                 return Json(response);

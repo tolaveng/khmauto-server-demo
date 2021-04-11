@@ -9,7 +9,7 @@ namespace Data.Domain.Models
     {
         public long InvoiceId { get; set; }
         public long InvoiceNo { get; set; }
-        public DateTime InvoiceDateTime { get; set; }
+        public DateTime InvoiceDate { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         public bool IsPaid { get; set; }
         public DateTime PaidDate { get; set; }

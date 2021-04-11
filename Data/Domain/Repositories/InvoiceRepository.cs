@@ -94,34 +94,58 @@ namespace Data.Domain.Repositories
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.Invoices.Where(z => !z.Archived)
-                .OrderByDescending(z => z.InvoiceId)
                 .Include(z => z.Car)
                 .AsNoTracking()
+                .OrderByDescending(z => z.InvoiceNo)
                 .Skip(skip).Take(pagination.PageSize).ToListAsync();
+        }
+
+        public IQueryable<Invoice> GetQueryable(InvoiceQuery query)
+        {
+            var queryable = context.Invoices.Include(z => z.Car).AsNoTracking().AsQueryable();
+            queryable = queryable.Where(z => !z.Archived);
+
+            if (!string.IsNullOrWhiteSpace(query.CarNo))
+            {
+                queryable = queryable.Where(z => z.Car.CarNo.Contains(query.CarNo));
+            }
+
+            if (query.InvoiceNo != 0)
+            {
+                queryable = queryable.Where(z => z.InvoiceNo == query.InvoiceNo);
+            }
+
+            if (query.InvoiceDate != null && query.InvoiceDate != default)
+            {
+                // make time to mid night 23.59 PM
+                if (query.InvoiceDate.TimeOfDay == TimeSpan.Zero)
+                {
+                    query.InvoiceDate = query.InvoiceDate.AddDays(1).AddMinutes(-1);
+                }
+                queryable = queryable.Where(z => z.InvoiceDate <= query.InvoiceDate);
+            }
+
+            if (!string.IsNullOrWhiteSpace(query.Customer))
+            {
+                queryable = queryable.Where(z => 
+                    z.FullName.Contains(query.Customer, StringComparison.OrdinalIgnoreCase) ||
+                    z.Phone.Contains(query.Customer)
+                );
+            }
+
+            return queryable;
         }
 
         public async Task<IEnumerable<Invoice>> GetByQuery(PaginationFilter pagination, InvoiceQuery query)
         {
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
-            return await context.Invoices.Where(z => !z.Archived &&
-                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
-                (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
-            )
-                .OrderByDescending(z => z.CarNo)
-                .Skip(skip).Take(pagination.PageSize).ToListAsync();
+            return await GetQueryable(query).OrderByDescending(z => z.InvoiceNo).Skip(skip).Take(pagination.PageSize).ToListAsync();
         }
 
         
         public async Task<long> GetCountByQuery(InvoiceQuery query)
         {
-            return await context.Invoices.Where(z => !z.Archived &&
-                (string.IsNullOrWhiteSpace(query.CarNo) || z.Car.CarNo.Contains(query.CarNo)) &&
-                (query.DateTime == null || z.InvoiceDateTime.Date.Equals(query.DateTime.Date)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerName) || z.FullName.Contains(query.CustomerName)) &&
-                (string.IsNullOrWhiteSpace(query.CustomerPhone.CleanText()) || z.Phone.Contains(query.CustomerPhone.CleanText()))
-            ).CountAsync();
+            return await GetQueryable(query).CountAsync();
         }
 
         public async Task<long> GetMaxInvoiceNo()

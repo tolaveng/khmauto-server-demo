@@ -7,8 +7,8 @@ namespace Data.DTO
     public class QuoteDto
     {
         public long QuoteId { get; set; }
-        public DateTime QuoteDateTime { get; set; }
-        public DateTime ModifiedDateTime { get; set; }
+        public string QuoteDate { get; set; }
+        public string ModifiedDateTime { get; set; }
 
         public float Gst { get; set; }
         public string Note { get; set; }
