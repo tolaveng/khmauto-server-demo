@@ -84,6 +84,53 @@ namespace KHMAuto.Controllers
         }
 
 
+        [HttpGet("getall")]
+        public async Task<ActionResult> GetSummaryReport([FromQuery] PageRequest pageRequest, [FromQuery] SummaryReportFilter filter = null)
+        {
+            var pageQuery = new PaginationQuery()
+            {
+                PageNumber = pageRequest.PageNumber,
+                PageSize = pageRequest.PageSize
+            };
+            var query = new InvoiceQuery();
+            if (filter == null)
+            {
+                return NoContent();
+            }
+
+            if (DateTime.TryParse(filter.FromDate, out var fromDate))
+            {
+                if (fromDate.Kind == DateTimeKind.Utc)
+                {
+                    fromDate = fromDate.ToLocalTime().Date;
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid From Date");
+            }
+
+            if (DateTime.TryParse(filter.ToDate, out var toDate))
+            {
+                if (toDate.Kind == DateTimeKind.Utc)
+                {
+                    toDate = toDate.ToLocalTime().Date;
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid To Date");
+            }
+
+            var response = await _invoiceService.GetSummaryReport(pageQuery, fromDate, toDate, filter.SortBy, filter.SortDir);
+            if (response != null)
+            {
+                return Json(response);
+            }
+            return Ok();
+        }
+
+
         [HttpPost("create")]
         public async Task<ActionResult> Create([FromBody] InvoiceDto invoice)
         {

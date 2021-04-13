@@ -16,5 +16,7 @@ namespace Data.Api.Services
         Task<InvoiceDto> Create(InvoiceDto invoice);
         Task Archive(long id);
         Task Update(InvoiceDto invoice);
+
+        Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null);
     }
 }

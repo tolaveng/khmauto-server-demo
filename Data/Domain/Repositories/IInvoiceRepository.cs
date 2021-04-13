@@ -2,6 +2,7 @@
 using Data.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
@@ -19,5 +20,6 @@ namespace Data.Domain.Repositories
         public Task<long> GetMaxInvoiceNo();
         public Task<long> GetCountByQuery(InvoiceQuery query);
         public Task<IEnumerable<Invoice>> GetByCarNo(string carNo);
+        public IQueryable<Invoice> GetQueryable();
     }
 }

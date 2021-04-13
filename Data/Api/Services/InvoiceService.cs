@@ -5,8 +5,10 @@ using Data.Domain.Repositories;
 using Data.DTO;
 using Data.Enums;
 using Data.Services;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -175,6 +177,35 @@ namespace Data.Api.Services
                 }
                 await transaction.CommitAsync();
             }
+        }
+
+        public async Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null)
+        {
+            var queryable = _invoiceRepository.GetQueryable();
+            queryable = queryable.Where(x => !x.Archived && x.InvoiceDate >= fromDate && x.InvoiceDate <= toDate);
+
+            if (sortBy.Equals("InvoiceDate", StringComparison.OrdinalIgnoreCase))
+            {
+                queryable = sortDir == "ASC" ? queryable.OrderBy(x => x.InvoiceDate) : queryable.OrderByDescending(x => x.InvoiceDate);
+            }
+
+            var totalCount = await queryable.SelectMany(x => x.Services).CountAsync();
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            var services = await queryable.SelectMany(x => x.Services).Skip(skip).Take(pagination.PageSize).ToListAsync();
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
+
+            var data = services.Select(x => new SummaryReport()
+            {
+                InvoiceDate = x.Invoice.InvoiceDate.ToString("dd/MM/yyyy"),
+                InvoiceNo = x.Invoice.InvoiceNo,
+                ServiceName = x.ServiceName,
+                Price = x.ServicePrice,
+                Qty = x.ServiceQty,
+                Gst = x.Invoice.Gst
+            });
+
+            return new PaginationResponse<SummaryReport>(data, totalCount, hasNext, pagination);
         }
     }
 }

@@ -176,5 +176,10 @@ namespace Data.Domain.Repositories
                 return 0;
             }
         }
+
+        public IQueryable<Invoice> GetQueryable()
+        {
+            return context.Invoices.Include(z => z.Car).AsNoTracking().AsQueryable();
+        }
     }
 }
