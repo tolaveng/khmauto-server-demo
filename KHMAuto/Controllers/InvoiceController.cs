@@ -140,7 +140,6 @@ namespace KHMAuto.Controllers
         [HttpGet("downloadSummaryReport")]
         public async Task<ActionResult> DownloadSummaryReport([FromQuery] SummaryReportFilter filter = null)
         {
-            Thread.Sleep(30000);
             var pageQuery = new PaginationQuery()
             {
                 PageNumber = 1,
