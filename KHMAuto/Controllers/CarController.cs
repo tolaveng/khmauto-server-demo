@@ -49,5 +49,29 @@ namespace KHMAuto.Controllers
             }
             return Ok();
         }
+
+        [HttpGet("getmakes")]
+        public async Task<ActionResult> GetMakes()
+        {
+
+            var response = await _carService.getMakes();
+            if (response != null)
+            {
+                return Json(response);
+            }
+            return Ok();
+        }
+
+        [HttpGet("getmodels")]
+        public async Task<ActionResult> GetModels()
+        {
+
+            var response = await _carService.getModels();
+            if (response != null)
+            {
+                return Json(response);
+            }
+            return Ok();
+        }
     }
 }

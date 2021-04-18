@@ -16,5 +16,7 @@ namespace Data.Domain.Repositories
         public Task<Car> Update(Car car);
         public Task<bool> Delete(string carNo);
         public Task<long> GetCount();
+        Task<string[]> getMakes();
+        Task<string[]> getModels();
     }
 }

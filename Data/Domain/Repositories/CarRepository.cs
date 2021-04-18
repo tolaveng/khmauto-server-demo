@@ -85,5 +85,15 @@ namespace Data.Domain.Repositories
         {
             return await context.Cars.CountAsync();
         }
+
+        public async Task<string[]> getMakes()
+        {
+            return await context.Cars.Where(z => !string.IsNullOrWhiteSpace(z.CarMake)).Select(z => z.CarMake).Distinct().Take(100).ToArrayAsync();
+        }
+
+        public async Task<string[]> getModels()
+        {
+            return await context.Cars.Where(z => !string.IsNullOrWhiteSpace(z.CarModel)).Select(z => z.CarModel).Distinct().Take(100).ToArrayAsync();
+        }
     }
 }

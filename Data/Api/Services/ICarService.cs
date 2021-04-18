@@ -16,5 +16,7 @@ namespace Data.Services
         Task Delete(string carNo);
         Task Update(CarDto car);
         Task<CarDto> CreateOrUpdate(CarDto car);
+        Task<string[]> getMakes();
+        Task<string[]> getModels();
     }
 }

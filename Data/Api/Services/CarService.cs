@@ -82,5 +82,15 @@ namespace Data.Services
             return _mapper.Map<CarDto>(updated);
             
         }
+
+        public async Task<string[]> getMakes()
+        {
+            return await _repository.getMakes();
+        }
+
+        public async Task<string[]> getModels()
+        {
+            return await _repository.getModels();
+        }
     }
 }
