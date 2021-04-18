@@ -34,24 +34,24 @@ namespace KHMAuto.Controllers
 
 
         
-        // [HttpGet("createcompany")]
+        [HttpPost("createcompany")]
         public async Task<ActionResult> CreateNewCompany()
         {
-            var company = new CompanyDto()
-            {
-                Name = "Test",
-                Abn = "test abn",
-                Address = "test address",
-                Phone = "0404 123 123",
-                Email = "test@test.com",
-                Gst = 10,
-                GstNumber = "08034343",
-                BankName = "bank name",
-                BankBsb = "bank bsb",
-                BankAccountName = "acc name",
-                BankAccountNumber = "acc num",
-            };
-            await _companyService.Create(company);
+            //var company = new CompanyDto()
+            //{
+            //    Name = "Test",
+            //    Abn = "test abn",
+            //    Address = "test address",
+            //    Phone = "0404 123 123",
+            //    Email = "test@test.com",
+            //    Gst = 10,
+            //    GstNumber = "08034343",
+            //    BankName = "bank name",
+            //    BankBsb = "bank bsb",
+            //    BankAccountName = "acc name",
+            //    BankAccountNumber = "acc num",
+            //};
+            //await _companyService.Create(company);
             return Ok();
         }
 

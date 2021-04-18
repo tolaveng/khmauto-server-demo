@@ -1,4 +1,5 @@
-﻿using Data.DTO;
+﻿using Data.Api.Common;
+using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,5 +16,7 @@ namespace Data.Api.Services
         Task Add(ServiceDto service);
         Task Update(ServiceDto service);
         Task<bool> Delete(long id);
+
+        Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null);
     }
 }

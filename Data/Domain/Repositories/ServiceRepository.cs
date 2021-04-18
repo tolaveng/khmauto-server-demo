@@ -47,6 +47,11 @@ namespace Data.Domain.Repositories
             return await context.Services.FirstOrDefaultAsync(z => z.ServiceName.Trim().Equals(name.Trim(), StringComparison.OrdinalIgnoreCase));
         }
 
+        public IQueryable<Service> GetQueryable()
+        {
+            return context.Services.Include(x => x.Invoice).AsNoTracking().AsQueryable();
+        }
+
         public async Task<Service> Update(Service service)
         {
             var change = context.Services.Attach(service);
