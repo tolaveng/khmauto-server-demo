@@ -102,6 +102,11 @@ namespace Data.Api.Services
 
         public async Task Archive(long id)
         {
+            var invoice = await _invoiceRepository.GetById(id);
+            if (invoice == null)
+            {
+                throw new ArgumentException("Invoice is not found");
+            }
             await _invoiceRepository.Archive(id);
         }
 

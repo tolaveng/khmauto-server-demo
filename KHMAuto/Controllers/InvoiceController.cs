@@ -45,6 +45,14 @@ namespace KHMAuto.Controllers
         }
 
 
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteById(long id)
+        {
+            await _invoiceService.Archive(id);
+            return Ok();
+        }
+
+
         [HttpGet("no/{no}")]
         public async Task<ActionResult> GetByNo(long no)
         {
