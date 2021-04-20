@@ -8,6 +8,7 @@ using Data.Interfaces;
 using Data.Mapper;
 using Data.Services;
 using Infrastructure;
+using KHMAuto.Middlewares;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -147,20 +148,20 @@ namespace KHMAuto
                     Type = SecuritySchemeType.ApiKey
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement {
-   {
-     new OpenApiSecurityScheme
-     {
-       Reference = new OpenApiReference
-       {
-         Type = ReferenceType.SecurityScheme,
-         Id = "Bearer"
-       }
-      },
-      new string[] { }
-    }
-  });
-            });
-        }
+                   {
+                     new OpenApiSecurityScheme
+                     {
+                       Reference = new OpenApiReference
+                       {
+                         Type = ReferenceType.SecurityScheme,
+                         Id = "Bearer"
+                       }
+                     },
+                     new string[] { }
+                   }
+                 });
+                });
+            }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -169,6 +170,8 @@ namespace KHMAuto
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseExceptionMiddleware();
 
             // app.UseHttpsRedirection();
 
