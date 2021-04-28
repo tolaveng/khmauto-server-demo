@@ -105,7 +105,8 @@ namespace KHMAuto
                         //ValidIssuer = jwtTokenConfig.Issuer,
                         ValidateAudience = false,
                         //ValidAudience = jwtTokenConfig.Audience,
-                        ValidateLifetime = true
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.Zero // remove 5 minute window after the token expired
                 };
             });
 

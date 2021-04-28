@@ -3,10 +3,12 @@ using Data.Domain.Models;
 using Data.DTO;
 using Data.Interfaces;
 using Data.Utils;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data.Api.Services
@@ -63,6 +65,7 @@ namespace Data.Api.Services
                 var result = await _signInManager.CheckPasswordSignInAsync(checkUser, user.Password, false);
                 if (result.Succeeded)
                 {
+                    await SetRefreshToken(checkUser);
                     var userDto = _mapper.Map<UserDto>(checkUser);
                     userDto.JwtToken = _jwtGenerator.CreateToken(checkUser);
                     return userDto;
@@ -122,6 +125,21 @@ namespace Data.Api.Services
             var user = await _userManager.FindByIdAsync(id.ToString());
             if (user == null) return null;
             return _mapper.Map<UserDto>(user);
+        }
+
+        public async Task SetRefreshToken(User user)
+        {
+            var refreshToken = _jwtGenerator.GenerateRefreshToken();
+            user.RefreshTokens.Add(refreshToken);
+            await _userManager.UpdateAsync(user);
+
+        }
+
+        public async Task<RefreshToken> GetRefreshTokenByUsername(string username)
+        {
+            var user = await _userManager.Users.Include(x => x.RefreshTokens).AsNoTracking().FirstOrDefaultAsync(x => x.UserName == username);
+            if (user == null) return null;
+            return user.RefreshTokens.LastOrDefault();
         }
     }
 }

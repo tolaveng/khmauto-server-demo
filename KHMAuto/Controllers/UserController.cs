@@ -131,5 +131,25 @@ namespace KHMAuto.Controllers
             }
             return Unauthorized();
         }
+
+        [Authorize]
+        [HttpPost("refreshToken")]
+        public async Task<ActionResult> RefreshToken([FromBody] string refreshToken)
+        {
+            var username = HttpContext.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            if (username == null) return BadRequest();
+
+            var oldToken = await _userService.GetRefreshTokenByUsername(username);
+            if (oldToken == null) return Unauthorized();
+
+            if (oldToken != null && !oldToken.IsActive) return Unauthorized();
+
+            var user = await _userService.GetByUsername(username);
+            if (user != null)
+            {
+                return Json(user);
+            }
+            return Unauthorized();
+        }
     }
 }

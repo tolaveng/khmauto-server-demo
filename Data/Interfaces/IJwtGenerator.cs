@@ -8,5 +8,7 @@ namespace Data.Interfaces
     public interface IJwtGenerator
     {
         string CreateToken(User user);
+
+        public RefreshToken GenerateRefreshToken();
     }
 }
