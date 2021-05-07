@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,42 @@ namespace Data.Domain.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Fix Mysql max key length
+            modelBuilder.Entity<User>().Property(u => u.Id).HasMaxLength(36);
+            modelBuilder.Entity<UserRole>().Property(u => u.Id).HasMaxLength(36);
+
+            // Shorten key length for Identity 
+            modelBuilder.Entity<User>(entity => {
+                entity.Property(m => m.Email).HasMaxLength(127);
+                entity.Property(m => m.NormalizedEmail).HasMaxLength(127);
+                entity.Property(m => m.NormalizedUserName).HasMaxLength(127);
+                entity.Property(m => m.UserName).HasMaxLength(127);
+            });
+            modelBuilder.Entity<IdentityRole>(entity => {
+                entity.Property(m => m.Name).HasMaxLength(127);
+                entity.Property(m => m.NormalizedName).HasMaxLength(127);
+            });
+            modelBuilder.Entity<IdentityUserLogin<int>>(entity =>
+            {
+                entity.Property(m => m.LoginProvider).HasMaxLength(127);
+                entity.Property(m => m.ProviderKey).HasMaxLength(127);
+            });
+            modelBuilder.Entity<IdentityUserRole<int>>(entity =>
+            {
+                entity.Property(m => m.UserId).HasMaxLength(127);
+                entity.Property(m => m.RoleId).HasMaxLength(127);
+            });
+            modelBuilder.Entity<IdentityUserToken<int>>(entity =>
+            {
+                entity.Property(m => m.UserId).HasMaxLength(127);
+                entity.Property(m => m.LoginProvider).HasMaxLength(127);
+                entity.Property(m => m.Name).HasMaxLength(127);
+
+            });
+
+            // end fix mysql max length
+
 
             modelBuilder.Entity<Car>().HasKey(z => z.CarNo);
 

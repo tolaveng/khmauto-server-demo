@@ -1,7 +1,10 @@
 using System;
 using System.Text;
+using System.Threading.Tasks;
 using AutoMapper;
 using Data.Api.Services;
+using Data.Api.SignalR;
+using Data.BackgrooundServices;
 using Data.Domain.Models;
 using Data.Domain.Repositories;
 using Data.Interfaces;
@@ -50,20 +53,47 @@ namespace KHMAuto
             //.AddJsonOptions(options =>
             //   options.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+            //services.AddCors(options =>
+            //{
+            //    options.AddDefaultPolicy(policy =>
+            //        policy.SetIsOriginAllowed(_ => true)
+            //        .AllowAnyMethod()
+            //        .AllowAnyHeader()
+            //        .AllowCredentials()    // SignalR
+            //        .WithExposedHeaders("Content-Disposition")  // download file;
+            //        );
+
+            //    //options.AddPolicy("CorsPolicy",
+            //    //    policy =>
+            //    //    {
+            //    //        policy
+            //    //        .AllowAnyOrigin()
+            //    //        .AllowAnyMethod()
+            //    //        .AllowAnyHeader()
+            //    //        //.WithOrigins("http://localhost")
+            //    //        .AllowCredentials() // required for SignalR
+            //    //        .WithExposedHeaders("Content-Disposition"); // download file
+            //    //    });
+            //});
+
             services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
-                    builder =>
-                    {
-                        builder
-                        //.AllowCredentials()
-                        .AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .WithExposedHeaders("Content-Disposition");
-                    });
-            });
+               options.AddPolicy("CorsPolicy",
+                   builder => builder
+                   .AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .WithExposedHeaders("Content-Disposition") // download file
+                   );
 
+               options.AddPolicy("SignalR",
+                   builder => builder
+                   .AllowAnyMethod()
+                   .AllowAnyHeader()
+                   .AllowCredentials()
+                   .WithExposedHeaders("Content-Disposition")  // download file
+                   .SetIsOriginAllowed(hostName => true));
+            });
 
 
             // Identity
@@ -106,15 +136,31 @@ namespace KHMAuto
                         ValidateAudience = false,
                         //ValidAudience = jwtTokenConfig.Audience,
                         ValidateLifetime = true,
-                        ClockSkew = TimeSpan.Zero // remove 5 minute window after the token expired
-                };
-            });
+                        ClockSkew = TimeSpan.Zero // remove 5 minute window after the token expired,
+                    };
+
+                    // Add Signal access token
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/backup"))
+                            {
+                                context.Token = accessToken;
+                            }
+                            return Task.CompletedTask;
+                        }
+                    };
+                });
 
 
             // Data
             services.AddDbContextPool<AppDataContext>(options =>
-            //    options.UseNpgsql(Configuration.GetConnectionString("PostgresDd"))
-                options.UseMySql(Configuration.GetConnectionString("MariaDb"))
+            //  options.UseNpgsql(Configuration.GetConnectionString("PostgresDd"))
+                options.UseMySQL(Configuration.GetConnectionString("MariaDb"))
+
             );
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
@@ -137,6 +183,8 @@ namespace KHMAuto
             services.AddScoped<IServiceIndexService, ServiceIndexService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IJwtGenerator, JwtGenerator>();
+
+            services.AddSingleton<IBackupJob, BackupJob>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -161,8 +209,15 @@ namespace KHMAuto
                      new string[] { }
                    }
                  });
-                });
-            }
+             });
+
+            // SignalR
+            services.AddSignalR();
+
+            // Backup service
+            //services.AddHostedService<BackupService>();
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -185,7 +240,8 @@ namespace KHMAuto
             });
 
             app.UseRouting();
-            app.UseCors("AllowAll");
+            //app.UseCors("CorsPolicy");
+            app.UseCors("SignalR");
 
             app.UseAuthentication();
             app.UseAuthorization();
@@ -193,6 +249,7 @@ namespace KHMAuto
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<BackupHub>("/backuphub");
             });
         }
     }

@@ -32,7 +32,7 @@ namespace KHMAuto.Controllers
         {
             if (user == null || string.IsNullOrWhiteSpace(user.Username) ||
                 string.IsNullOrWhiteSpace(user.Password) ||
-                user.RegisterSecret != "T0LA"
+                user.RegisterSecret != "Admin555"
                 )
             {
                 return BadRequest();

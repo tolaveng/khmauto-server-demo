@@ -20,13 +20,13 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Domain.Models.Car", b =>
                 {
                     b.Property<string>("CarNo")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(767)");
 
                     b.Property<string>("CarMake")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("CarModel")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int>("CarYear")
                         .HasColumnType("int");
@@ -46,37 +46,37 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Abn")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("BankAccountName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("BankAccountNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("BankBsb")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("BankName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<float>("Gst")
                         .HasColumnType("float");
 
                     b.Property<string>("GstNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.HasKey("CompanyId");
 
@@ -90,31 +90,31 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Abn")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<bool>("Archived")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("CarNo")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(767)");
 
                     b.Property<string>("Company")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<float>("Gst")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("InvoiceDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<long>("InvoiceNo")
                         .HasColumnType("bigint");
@@ -123,22 +123,22 @@ namespace Data.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTime>("ModifiedDateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Note")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<long>("ODO")
                         .HasColumnType("bigint");
 
                     b.Property<DateTime>("PaidDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("PaymentMethod")
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -160,37 +160,37 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("Abn")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Address")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("CarNo")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(767)");
 
                     b.Property<string>("Company")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<float>("Gst")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("ModifiedDateTime")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Note")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("QuoteDate")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -209,13 +209,13 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<DateTime>("Expires")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<DateTime?>("Revoked")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("datetime");
 
                     b.Property<string>("Token")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int?>("userId")
                         .HasColumnType("int");
@@ -240,7 +240,7 @@ namespace Data.Migrations
                         .HasColumnType("bigint");
 
                     b.Property<string>("ServiceName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("ServicePrice")
                         .HasColumnType("decimal(8, 2)");
@@ -260,7 +260,7 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Domain.Models.ServiceIndex", b =>
                 {
                     b.Property<string>("ServiceName")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(767)");
 
                     b.Property<decimal>("ServicePrice")
                         .HasColumnType("decimal(8, 2)");
@@ -274,57 +274,58 @@ namespace Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasMaxLength(36);
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("FullName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetime(6)");
+                        .HasColumnType("timestamp");
 
                     b.Property<string>("NormalizedEmail")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<bool>("isAdmin")
                         .HasColumnType("tinyint(1)");
@@ -345,18 +346,19 @@ namespace Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasMaxLength(36);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(256)")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(256)")
                         .HasMaxLength(256);
 
                     b.HasKey("Id");
@@ -368,6 +370,27 @@ namespace Data.Migrations
                     b.ToTable("AspNetRoles");
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(767)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
+
+                    b.Property<string>("NormalizedName")
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("IdentityRole");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
                     b.Property<int>("Id")
@@ -375,10 +398,10 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");
@@ -397,10 +420,10 @@ namespace Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -415,13 +438,15 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -436,10 +461,12 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasMaxLength(127);
 
                     b.Property<int>("RoleId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasMaxLength(127);
 
                     b.HasKey("UserId", "RoleId");
 
@@ -451,16 +478,19 @@ namespace Data.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.Property<int>("UserId")
-                        .HasColumnType("int");
+                        .HasColumnType("int")
+                        .HasMaxLength(127);
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("Value")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
