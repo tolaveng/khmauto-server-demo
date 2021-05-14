@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace Data.Migrations
 {
-    public partial class init : Migration
+    public partial class inittables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -222,25 +222,24 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RefreshToken",
+                name: "RefreshTokens",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    userId = table.Column<int>(nullable: true),
+                    UserId = table.Column<int>(nullable: false),
                     Token = table.Column<string>(nullable: true),
-                    Expires = table.Column<DateTime>(nullable: false),
-                    Revoked = table.Column<DateTime>(nullable: true)
+                    Expires = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RefreshToken", x => x.Id);
+                    table.PrimaryKey("PK_RefreshTokens", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RefreshToken_AspNetUsers_userId",
-                        column: x => x.userId,
+                        name: "FK_RefreshTokens_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -392,9 +391,10 @@ namespace Data.Migrations
                 column: "CarNo");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RefreshToken_userId",
-                table: "RefreshToken",
-                column: "userId");
+                name: "IX_RefreshTokens_UserId",
+                table: "RefreshTokens",
+                column: "UserId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Services_InvoiceId",
@@ -431,7 +431,7 @@ namespace Data.Migrations
                 name: "IdentityRole");
 
             migrationBuilder.DropTable(
-                name: "RefreshToken");
+                name: "RefreshTokens");
 
             migrationBuilder.DropTable(
                 name: "ServiceIndexs");

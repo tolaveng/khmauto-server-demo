@@ -88,7 +88,7 @@ namespace Data.Api.Services
         public async Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null)
         {
             var queryable = _repository.GetQueryable();
-            queryable = queryable.Where(x => !x.Invoice.Archived && x.Invoice.InvoiceDate >= fromDate && x.Invoice.InvoiceDate <= toDate);
+            queryable = queryable.Where(x => !x.Invoice.Archived && x.Invoice.PaymentMethod != Enums.PaymentMethod.Unpaid && x.Invoice.InvoiceDate >= fromDate && x.Invoice.InvoiceDate <= toDate);
 
             if (!string.IsNullOrWhiteSpace(sortBy) && sortBy.Equals("InvoiceDate", StringComparison.OrdinalIgnoreCase))
             {

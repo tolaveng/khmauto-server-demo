@@ -11,7 +11,6 @@ namespace Data.DTO
         public long InvoiceNo { get; set; }
         public string InvoiceDate { get; set; }
         public string ModifiedDateTime { get; set; }
-        public bool IsPaid { get; set; }
         public string PaidDate { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public float Gst { get; set; }
@@ -29,6 +28,8 @@ namespace Data.DTO
         public string Abn { get; set; }
 
         public int UserId { get; set; }
+
+        public decimal Discount { get; set; }
 
         public Boolean Archived { get; set; }
 

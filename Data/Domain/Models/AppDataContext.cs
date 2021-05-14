@@ -19,6 +19,8 @@ namespace Data.Domain.Models
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<Quote> Quotes { get; set; }
 
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
+
         public DbSet<ServiceIndex> ServiceIndexs { get; set; }
 
 
@@ -90,6 +92,11 @@ namespace Data.Domain.Models
 
             modelBuilder.Entity<Invoice>()
                 .HasIndex(z => z.InvoiceNo).IsUnique();
+
+            //modelBuilder.Entity<User>()
+            //    .HasOne(u => u.RefreshToken)
+            //    .WithOne(r => r.user)
+            //    .HasForeignKey<RefreshToken>(r => r.UserId);
         }
 
     }

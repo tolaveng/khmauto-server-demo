@@ -25,6 +25,10 @@ namespace Data.Domain.Models
 
         public int UserId { get; set; }
 
+        public decimal Discount { get; set; }
+
+        public Boolean Archived { get; set; }
+
         public virtual ICollection<Service> Services { get; set; }
 
         public Quote() {

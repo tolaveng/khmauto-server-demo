@@ -25,6 +25,10 @@ namespace Data.DTO
 
         public int UserId { get; set; }
 
+        public decimal Discount { get; set; }
+
+        public Boolean Archived { get; set; }
+
         // Service
         public ICollection<ServiceDto> Services { get; set; }
         public QuoteDto() {

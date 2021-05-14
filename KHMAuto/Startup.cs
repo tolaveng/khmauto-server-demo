@@ -173,6 +173,7 @@ namespace KHMAuto
             services.AddScoped<IQuoteRepository, QuoteRepository>();
             services.AddScoped<IServiceRepository, ServiceRepository>();
             services.AddScoped<IServiceIndexRepository, ServiceIndexRepository>();
+            services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
 
             // Add Services
             services.AddScoped<ICarService, CarService>();

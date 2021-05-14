@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using Data.Domain.Models;
+using Data.Domain.Repositories;
 using Data.DTO;
 using Data.Interfaces;
 using Data.Utils;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -20,13 +20,18 @@ namespace Data.Api.Services
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly IJwtGenerator _jwtGenerator;
+        private readonly IRefreshTokenRepository _refreshTokenRepository;
 
-        public UserService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, IJwtGenerator jwtGenerator)
+        public UserService(IMapper mapper, UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IJwtGenerator jwtGenerator,
+            IRefreshTokenRepository refreshTokenRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _jwtGenerator = jwtGenerator;
             _mapper = mapper;
+            _refreshTokenRepository = refreshTokenRepository;
 
         }
 
@@ -65,16 +70,17 @@ namespace Data.Api.Services
                 var result = await _signInManager.CheckPasswordSignInAsync(checkUser, user.Password, false);
                 if (result.Succeeded)
                 {
-                    await SetRefreshToken(checkUser);
+                    await UpdateRefreshToken(checkUser);
                     var userDto = _mapper.Map<UserDto>(checkUser);
                     userDto.JwtToken = _jwtGenerator.CreateToken(checkUser);
+                    userDto.RefreshToken = _mapper.Map <RefreshTokenDto>(checkUser.RefreshToken);
                     return userDto;
                 }
             }
             return null;
         }
 
-        
+
         public async Task UpdateUser(UserDto user, string newPassword = null)
         {
             if (string.IsNullOrWhiteSpace(user.Username) || string.IsNullOrWhiteSpace(user.FullName) || string.IsNullOrWhiteSpace(user.Password))
@@ -106,7 +112,9 @@ namespace Data.Api.Services
 
         public async Task<UserDto> GetByUsername(string username)
         {
-            var user = await _userManager.FindByNameAsync(username);
+            //var user = await _userManager.FindByNameAsync(username);
+            var user = await _userManager.Users.Include(x => x.RefreshToken).AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == username);   // should be Single
             if (user == null) return null;
             return _mapper.Map<UserDto>(user);
         }
@@ -127,19 +135,38 @@ namespace Data.Api.Services
             return _mapper.Map<UserDto>(user);
         }
 
-        public async Task SetRefreshToken(User user)
+        public async Task UpdateRefreshToken(User user)
         {
             var refreshToken = _jwtGenerator.GenerateRefreshToken();
-            user.RefreshTokens.Add(refreshToken);
+            await _refreshTokenRepository.RemoveAll(user.Id);
+            user.RefreshToken = refreshToken;
             await _userManager.UpdateAsync(user);
-
         }
 
-        public async Task<RefreshToken> GetRefreshTokenByUsername(string username)
+        public async Task<RefreshToken> GetRefreshTokenByUsername(string username, string refreshToken)
         {
-            var user = await _userManager.Users.Include(x => x.RefreshTokens).AsNoTracking().FirstOrDefaultAsync(x => x.UserName == username);
+            var user = await _userManager.Users.Include(x => x.RefreshToken).AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserName == username);
             if (user == null) return null;
-            return user.RefreshTokens.LastOrDefault();
+            if (user.RefreshToken.Token.Equals(refreshToken, StringComparison.OrdinalIgnoreCase))
+            {
+                return user.RefreshToken;
+            }
+            return null;
+        }
+
+        public async Task<UserDto> CreateNewToken(UserDto user)
+        {
+            var checkUser = await _userManager.FindByNameAsync(user.Username);
+            if (checkUser != null)
+            {
+                await UpdateRefreshToken(checkUser);
+                var userDto = _mapper.Map<UserDto>(checkUser);
+                userDto.JwtToken = _jwtGenerator.CreateToken(checkUser);
+                userDto.RefreshToken = _mapper.Map<RefreshTokenDto>(checkUser.RefreshToken);
+                return userDto;
+            }
+            return null;
         }
     }
 }

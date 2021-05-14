@@ -134,20 +134,20 @@ namespace KHMAuto.Controllers
 
         [Authorize]
         [HttpPost("refreshToken")]
-        public async Task<ActionResult> RefreshToken([FromBody] string refreshToken)
+        public async Task<ActionResult> RefreshToken([FromBody] RefreshTokenRequest refreshToken)
         {
-            var username = HttpContext.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            if (username == null) return BadRequest();
+            if (string.IsNullOrWhiteSpace(refreshToken.refreshToken)) return BadRequest();
 
-            var oldToken = await _userService.GetRefreshTokenByUsername(username);
+            var oldToken = await _userService.GetRefreshTokenByUsername(refreshToken.username, refreshToken.refreshToken);
             if (oldToken == null) return Unauthorized();
 
-            if (oldToken != null && !oldToken.IsActive) return Unauthorized();
+            if (oldToken.IsExpired) return Unauthorized();
 
-            var user = await _userService.GetByUsername(username);
+            var user = await _userService.GetByUsername(refreshToken.username);
             if (user != null)
             {
-                return Json(user);
+                var newUser = await _userService.CreateNewToken(user);
+                return Json(newUser);
             }
             return Unauthorized();
         }

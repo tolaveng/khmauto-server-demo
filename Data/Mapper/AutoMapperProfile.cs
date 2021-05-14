@@ -14,6 +14,7 @@ namespace Data.Mapper
             CreateMap<Service, ServiceDto>();
             CreateMap<ServiceIndex, ServiceIndexDto>();
             CreateMap<Quote, QuoteDto>();
+            CreateMap<RefreshToken, RefreshTokenDto>();
 
             // Dto
             CreateMap<CarDto, Car>();
@@ -22,8 +23,9 @@ namespace Data.Mapper
             CreateMap<ServiceIndexDto, ServiceIndex>();
             CreateMap<UserDto, User>();
             CreateMap<QuoteDto, Quote>();
+            CreateMap<RefreshTokenDto, RefreshToken>();
 
-            
+
             // mapping
             CreateMap<Invoice, InvoiceDto>()
                 .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => z.InvoiceDate.ToString("yyyy-MM-dd")))

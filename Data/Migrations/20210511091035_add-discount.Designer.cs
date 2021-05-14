@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20210506093523_init")]
-    partial class init
+    [Migration("20210511091035_add-discount")]
+    partial class adddiscount
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -106,6 +106,9 @@ namespace Data.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18, 2)");
+
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
@@ -167,11 +170,17 @@ namespace Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
+                    b.Property<bool>("Archived")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("CarNo")
                         .HasColumnType("varchar(767)");
 
                     b.Property<string>("Company")
                         .HasColumnType("text");
+
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");
@@ -213,20 +222,18 @@ namespace Data.Migrations
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime");
 
-                    b.Property<DateTime?>("Revoked")
-                        .HasColumnType("datetime");
-
                     b.Property<string>("Token")
                         .HasColumnType("text");
 
-                    b.Property<int?>("userId")
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("userId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
-                    b.ToTable("RefreshToken");
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Service", b =>
@@ -516,8 +523,10 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Domain.Models.RefreshToken", b =>
                 {
                     b.HasOne("Data.Domain.Models.User", "user")
-                        .WithMany("RefreshTokens")
-                        .HasForeignKey("userId");
+                        .WithOne("RefreshToken")
+                        .HasForeignKey("Data.Domain.Models.RefreshToken", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Data.Domain.Models.Service", b =>

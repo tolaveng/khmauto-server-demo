@@ -8,7 +8,7 @@ namespace Data.Domain.Models
         public string FullName { get; set; }
         public bool isAdmin { get; set; }
 
-        public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
+        public RefreshToken RefreshToken { get; set; } = new RefreshToken();
 
     }
 }

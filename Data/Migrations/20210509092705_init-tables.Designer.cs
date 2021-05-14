@@ -3,14 +3,16 @@ using System;
 using Data.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    partial class AppDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210509092705_init-tables")]
+    partial class inittables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,9 +106,6 @@ namespace Data.Migrations
                     b.Property<string>("Company")
                         .HasColumnType("text");
 
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18, 2)");
-
                     b.Property<string>("Email")
                         .HasColumnType("text");
 
@@ -168,17 +167,11 @@ namespace Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Archived")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("CarNo")
                         .HasColumnType("varchar(767)");
 
                     b.Property<string>("Company")
                         .HasColumnType("text");
-
-                    b.Property<decimal>("Discount")
-                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<string>("Email")
                         .HasColumnType("text");

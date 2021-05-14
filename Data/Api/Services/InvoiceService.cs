@@ -59,7 +59,6 @@ namespace Data.Api.Services
             var isPaid = newInvoice.PaymentMethod != PaymentMethod.Unpaid;
             if (isPaid)
             {
-                newInvoice.IsPaid = isPaid;
                 newInvoice.PaidDate = DateTime.Now;
             }
 

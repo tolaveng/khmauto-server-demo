@@ -11,7 +11,6 @@ namespace Data.Domain.Models
         public long InvoiceNo { get; set; }
         public DateTime InvoiceDate { get; set; }
         public DateTime ModifiedDateTime { get; set; }
-        public bool IsPaid { get; set; }
         public DateTime PaidDate { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public float Gst { get; set; }
@@ -29,6 +28,8 @@ namespace Data.Domain.Models
         public string Abn { get; set; }
 
         public int UserId { get; set; }
+
+        public decimal Discount { get; set; }
 
         public Boolean Archived { get; set; }
 

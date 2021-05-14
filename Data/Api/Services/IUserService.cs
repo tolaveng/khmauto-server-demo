@@ -15,6 +15,7 @@ namespace Data.Api.Services
         public Task Register(UserDto user);
         public Task<UserDto> SignIn(UserDto user);
         public Task UpdateUser(UserDto user, string newPassword = null);
-        public Task<RefreshToken> GetRefreshTokenByUsername(string username);
+        public Task<RefreshToken> GetRefreshTokenByUsername(string username, string refreshToken);
+        public Task<UserDto> CreateNewToken(UserDto user);
     }
 }

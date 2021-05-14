@@ -14,6 +14,7 @@ namespace Data.DTO
         public bool isAdmin { get; set; }
 
         public string JwtToken { get; set; }
+        public RefreshTokenDto RefreshToken { get; set; }
 
         public UserDto() { }
     }
