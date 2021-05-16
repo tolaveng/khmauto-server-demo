@@ -55,7 +55,7 @@ namespace Data.Domain.Repositories
 
         public async Task<IEnumerable<ServiceIndex>> GetAll(int limit)
         {
-            return await context.ServiceIndexs.Take(limit).ToListAsync();
+            return await context.ServiceIndexs.Distinct().Take(limit).ToListAsync();
         }
     }
 }

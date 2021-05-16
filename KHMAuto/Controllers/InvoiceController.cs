@@ -24,12 +24,16 @@ namespace KHMAuto.Controllers
         private readonly IInvoiceService _invoiceService;
         private readonly IServiceService _serviceService;
         private readonly IServiceIndexService _serviceIndexService;
+        private readonly IQuoteService _quoteService;
 
-        public InvoiceController(IInvoiceService invoiceService, IServiceService serviceService, IServiceIndexService serviceIndexService)
+        public InvoiceController(IInvoiceService invoiceService, IServiceService serviceService,
+            IServiceIndexService serviceIndexService,
+            IQuoteService quoteService)
         {
             _invoiceService = invoiceService;
             _serviceService = serviceService;
             _serviceIndexService = serviceIndexService;
+            _quoteService = quoteService;
         }
 
 
@@ -338,6 +342,47 @@ namespace KHMAuto.Controllers
             response.success = true;
             response.message = "";
             return Json(response);
+        }
+
+        
+        [HttpGet("fromQuote/{quoteId}")]
+        public async Task<ActionResult> Fromquote(string quoteId)
+        {
+            if (string.IsNullOrWhiteSpace(quoteId) || !int.TryParse(quoteId, out var newQuoteId))
+            {
+                return BadRequest();
+            }
+            var quote = await _quoteService.GetById(newQuoteId);
+            if (quote == null) return BadRequest("Quote is not found");
+
+            var services = quote.Services;
+            foreach(var service in services)
+            {
+                service.ServiceId = 0;
+            }
+
+            var invoice = new InvoiceDto()
+            {
+                FullName = quote.FullName,
+                Phone = quote.Phone,
+                Email = quote.Email,
+                Company = quote.Company,
+                Abn = quote.Abn,
+                Address = quote.Address,
+                Car = new CarDto
+                {
+                    CarNo = quote.Car.CarNo,
+                    ODO = quote.Car.ODO,
+                    CarYear = quote.Car.CarYear,
+                    CarMake = quote.Car.CarMake,
+                    CarModel = quote.Car.CarModel
+                },
+                Note = quote.Note,
+                PaymentMethod = Data.Enums.PaymentMethod.Card,
+                Services = services
+            };
+
+            return Json(invoice);
         }
 
 
