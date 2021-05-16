@@ -13,7 +13,6 @@ namespace Data.Mapper
             CreateMap<Company, CompanyDto>();
             CreateMap<Service, ServiceDto>();
             CreateMap<ServiceIndex, ServiceIndexDto>();
-            CreateMap<Quote, QuoteDto>();
             CreateMap<RefreshToken, RefreshTokenDto>();
 
             // Dto
@@ -22,7 +21,6 @@ namespace Data.Mapper
             CreateMap<ServiceDto, Service>();
             CreateMap<ServiceIndexDto, ServiceIndex>();
             CreateMap<UserDto, User>();
-            CreateMap<QuoteDto, Quote>();
             CreateMap<RefreshTokenDto, RefreshToken>();
 
 
@@ -31,22 +29,27 @@ namespace Data.Mapper
                 .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => z.InvoiceDate.ToString("yyyy-MM-dd")))
                 ;
 
+            CreateMap<Quote, QuoteDto>()
+                .ForMember(x => x.QuoteDate, m => m.MapFrom(z => z.QuoteDate.ToString("yyyy-MM-dd")))
+                ;
+
 
             Func<string, DateTime> InvoiceStringDateTime = delegate (string stringDate)
             {
+                if (DateTime.TryParse(stringDate, out var result))
                 {
-                    if (DateTime.TryParse(stringDate, out var result))
-                    {
-                        if (result.Kind == DateTimeKind.Utc)
-                            result = result.ToLocalTime();
-                        return result.Date;
-                    }
-                    return default;
+                    if (result.Kind == DateTimeKind.Utc)
+                        result = result.ToLocalTime();
+                    return result.Date;
                 }
+                return default;
             };
 
             CreateMap<InvoiceDto, Invoice>()
                 .ForMember(x => x.InvoiceDate, m => m.MapFrom(z => InvoiceStringDateTime(z.InvoiceDate)));
+
+            CreateMap<QuoteDto, Quote>()
+                .ForMember(x => x.QuoteDate, m => m.MapFrom(z => InvoiceStringDateTime(z.QuoteDate)));
 
 
             CreateMap<User, UserDto>()

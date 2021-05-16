@@ -66,6 +66,8 @@ namespace Data.Api.Services
             foreach(var service in newInvoice.Services)
             {
                 if (service.ServiceId < 1) service.ServiceId = 0;
+                service.Quote = null;
+                service.QuoteId = null;
             }
 
             using (var transaction = await _transactionRepository.BeginTransaction())
@@ -94,8 +96,8 @@ namespace Data.Api.Services
                     throw ex;
                 }          
                 await transaction.CommitAsync();
+                return _mapper.Map<InvoiceDto>(newInvoice);
             }
-            return _mapper.Map<InvoiceDto>(newInvoice);
         }
 
 
@@ -160,6 +162,8 @@ namespace Data.Api.Services
             foreach (var service in updateInvoice.Services)
             {
                 if (service.ServiceId < 1) service.ServiceId = 0;
+                service.Invoice = null;
+                service.InvoiceId = null;
             }
 
             using (var transaction = await _transactionRepository.BeginTransaction())

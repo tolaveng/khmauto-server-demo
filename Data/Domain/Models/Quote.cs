@@ -10,7 +10,6 @@ namespace Data.Domain.Models
         public DateTime QuoteDate { get; set; }
         public DateTime ModifiedDateTime { get; set; }
         
-        public float Gst { get; set; }
         public string Note { get; set; }
 
         public string CarNo { get; set; }
@@ -27,7 +26,6 @@ namespace Data.Domain.Models
 
         public decimal Discount { get; set; }
 
-        public Boolean Archived { get; set; }
 
         public virtual ICollection<Service> Services { get; set; }
 

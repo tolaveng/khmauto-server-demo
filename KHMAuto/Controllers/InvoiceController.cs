@@ -79,7 +79,7 @@ namespace KHMAuto.Controllers
                 query.InvoiceNo = long.TryParse(filter.InvoiceNo, out var pInvoiceNo) ? pInvoiceNo :  0;
                 query.CarNo = filter.CarNo ?? "";
                 query.Customer = filter.Customer ?? "";
-                if (DateTime.TryParse(filter.InvoiceDate, out var parsedDate)) {
+                if (!string.IsNullOrWhiteSpace(filter.InvoiceDate) && DateTime.TryParse(filter.InvoiceDate, out var parsedDate)) {
                     if (parsedDate.Kind == DateTimeKind.Utc)
                     {
                         parsedDate = parsedDate.ToLocalTime().Date;
