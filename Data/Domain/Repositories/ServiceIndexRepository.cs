@@ -55,7 +55,19 @@ namespace Data.Domain.Repositories
 
         public async Task<IEnumerable<ServiceIndex>> GetAll(int limit)
         {
-            return await context.ServiceIndexs.Distinct().Take(limit).ToListAsync();
+            try
+            {
+                // Distinct by using group by
+                return await context.ServiceIndexs.Where(x => !string.IsNullOrWhiteSpace(x.ServiceName))
+                    .GroupBy(x => new { x.ServiceName, x.ServicePrice })
+                    .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
+                    .Take(limit)
+                    .ToListAsync();
+            }
+            catch(Exception e)
+            {
+                return new List<ServiceIndex>();
+            }
         }
     }
 }
