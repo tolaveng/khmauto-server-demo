@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 namespace Data.Migrations
 {
-    public partial class inittables : Migration
+    public partial class InitTables : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,8 +14,8 @@ namespace Data.Migrations
                 {
                     Id = table.Column<int>(maxLength: 36, nullable: false)
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    Name = table.Column<string>(maxLength: 127, nullable: true),
+                    NormalizedName = table.Column<string>(maxLength: 127, nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -90,29 +90,18 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IdentityRole",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    Name = table.Column<string>(maxLength: 127, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 127, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityRole", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "ServiceIndexs",
                 columns: table => new
                 {
-                    ServiceName = table.Column<string>(nullable: false),
+                    ServiceIndexId = table.Column<int>(nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    ServiceIndexHash = table.Column<string>(nullable: true),
+                    ServiceName = table.Column<string>(nullable: true),
                     ServicePrice = table.Column<decimal>(type: "decimal(8, 2)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServiceIndexs", x => x.ServiceName);
+                    table.PrimaryKey("PK_ServiceIndexs", x => x.ServiceIndexId);
                 });
 
             migrationBuilder.CreateTable(
@@ -251,7 +240,6 @@ namespace Data.Migrations
                     InvoiceNo = table.Column<long>(nullable: false),
                     InvoiceDate = table.Column<DateTime>(nullable: false),
                     ModifiedDateTime = table.Column<DateTime>(nullable: false),
-                    IsPaid = table.Column<bool>(nullable: false),
                     PaidDate = table.Column<DateTime>(nullable: false),
                     PaymentMethod = table.Column<int>(nullable: false),
                     Gst = table.Column<float>(nullable: false),
@@ -265,6 +253,7 @@ namespace Data.Migrations
                     Address = table.Column<string>(nullable: true),
                     Abn = table.Column<string>(nullable: true),
                     UserId = table.Column<int>(nullable: false),
+                    Discount = table.Column<decimal>(nullable: false),
                     Archived = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -286,7 +275,6 @@ namespace Data.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     QuoteDate = table.Column<DateTime>(nullable: false),
                     ModifiedDateTime = table.Column<DateTime>(nullable: false),
-                    Gst = table.Column<float>(nullable: false),
                     Note = table.Column<string>(nullable: true),
                     CarNo = table.Column<string>(nullable: true),
                     FullName = table.Column<string>(nullable: true),
@@ -295,7 +283,8 @@ namespace Data.Migrations
                     Email = table.Column<string>(nullable: true),
                     Address = table.Column<string>(nullable: true),
                     Abn = table.Column<string>(nullable: true),
-                    UserId = table.Column<int>(nullable: false)
+                    UserId = table.Column<int>(nullable: false),
+                    Discount = table.Column<decimal>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -426,9 +415,6 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Companies");
-
-            migrationBuilder.DropTable(
-                name: "IdentityRole");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");

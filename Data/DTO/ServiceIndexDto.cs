@@ -6,6 +6,7 @@ namespace Data.DTO
 {
     public class ServiceIndexDto
     {
+        public string ServiceIndexHash { get; set; }
         public string ServiceName { get; set; }
         public Decimal ServicePrice { get; set; }
 

@@ -1,6 +1,7 @@
 ﻿using Data.Utils;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace Data.Domain.Models
 {
     public class Car
     {
-        [key]
+        [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public string CarNo { get; set; }
         public string CarModel { get; set; }

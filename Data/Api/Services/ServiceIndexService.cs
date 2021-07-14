@@ -19,9 +19,9 @@ namespace Data.Api.Services
             _mapper = mapper;
 
         }
-        public async Task<IEnumerable<ServiceIndexDto>> FindByServiceName(string serviceName)
+        public async Task<IEnumerable<ServiceIndexDto>> FindByServiceName(string serviceName, int limit)
         {
-            var services = await _repository.FindByServiceName(serviceName);
+            var services = await _repository.FindByServiceName(serviceName, limit);
             return _mapper.Map<IEnumerable<ServiceIndexDto>>(services);
         }
 

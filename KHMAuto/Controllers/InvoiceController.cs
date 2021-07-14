@@ -387,14 +387,22 @@ namespace KHMAuto.Controllers
 
 
         [HttpGet("getserviceindex")]
-        public async Task<ActionResult> GetServiceIndex()
+        public async Task<ActionResult> GetServiceIndex(string serviceName)
         {
-            var response = await _serviceIndexService.GetAll(100);
-            if (response != null)
+            var response = new List<ServiceIndexDto>();
+            if (string.IsNullOrWhiteSpace(serviceName))
             {
-                return Json(response);
+                var result = await _serviceIndexService.GetAll(200);
+                if (result != null)
+                    response = result.ToList();
+            } else
+            {
+                var result = await _serviceIndexService.FindByServiceName(serviceName, 200);
+                if (result != null)
+                    response = result.ToList();
             }
-            return Ok();
+
+            return Json(response);
         }
 
 

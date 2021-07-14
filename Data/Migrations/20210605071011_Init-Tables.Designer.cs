@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20210511091035_add-discount")]
-    partial class adddiscount
+    [Migration("20210605071011_Init-Tables")]
+    partial class InitTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -124,9 +124,6 @@ namespace Data.Migrations
                     b.Property<long>("InvoiceNo")
                         .HasColumnType("bigint");
 
-                    b.Property<bool>("IsPaid")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<DateTime>("ModifiedDateTime")
                         .HasColumnType("datetime");
 
@@ -170,9 +167,6 @@ namespace Data.Migrations
                     b.Property<string>("Address")
                         .HasColumnType("text");
 
-                    b.Property<bool>("Archived")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<string>("CarNo")
                         .HasColumnType("varchar(767)");
 
@@ -187,9 +181,6 @@ namespace Data.Migrations
 
                     b.Property<string>("FullName")
                         .HasColumnType("text");
-
-                    b.Property<float>("Gst")
-                        .HasColumnType("float");
 
                     b.Property<DateTime>("ModifiedDateTime")
                         .HasColumnType("datetime");
@@ -268,13 +259,20 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Domain.Models.ServiceIndex", b =>
                 {
+                    b.Property<int>("ServiceIndexId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ServiceIndexHash")
+                        .HasColumnType("text");
+
                     b.Property<string>("ServiceName")
-                        .HasColumnType("varchar(767)");
+                        .HasColumnType("text");
 
                     b.Property<decimal>("ServicePrice")
                         .HasColumnType("decimal(8, 2)");
 
-                    b.HasKey("ServiceName");
+                    b.HasKey("ServiceIndexId");
 
                     b.ToTable("ServiceIndexs");
                 });
@@ -363,12 +361,12 @@ namespace Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(256)")
-                        .HasMaxLength(256);
+                        .HasColumnType("varchar(127)")
+                        .HasMaxLength(127);
 
                     b.HasKey("Id");
 
@@ -377,27 +375,6 @@ namespace Data.Migrations
                         .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(767)");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("varchar(127)")
-                        .HasMaxLength(127);
-
-                    b.Property<string>("NormalizedName")
-                        .HasColumnType("varchar(127)")
-                        .HasMaxLength(127);
-
-                    b.HasKey("Id");
-
-                    b.ToTable("IdentityRole");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

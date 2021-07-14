@@ -1,9 +1,11 @@
 ﻿using Data.Domain.Models;
+using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
@@ -20,7 +22,9 @@ namespace Data.Domain.Repositories
         {
             try
             {
-                var service = await GetService(serviceName);
+                var serviceHash = serviceName.Trim().CleanWhiteSpace().GetShaHash();
+
+                var service = await context.ServiceIndexs.SingleOrDefaultAsync(x => x.ServiceIndexHash == serviceHash);
                 if (service != null)
                 {
                     service.ServicePrice = price;
@@ -30,6 +34,7 @@ namespace Data.Domain.Repositories
                 {
                     service = new ServiceIndex()
                     {
+                        ServiceIndexHash = serviceHash,
                         ServiceName = serviceName.Trim(),
                         ServicePrice = price
                     };
@@ -43,9 +48,14 @@ namespace Data.Domain.Repositories
             }
         }
 
-        public async Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName)
+        public async Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName, int limit)
         {
-            return await context.ServiceIndexs.Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase)).ToListAsync();
+            return await context.ServiceIndexs
+                .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
+                .GroupBy(x => new { x.ServiceName, x.ServicePrice })
+                .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
+                .Take(limit)
+                .ToListAsync();
         }
 
         public async Task<ServiceIndex> GetService(string serviceName)
@@ -59,6 +69,7 @@ namespace Data.Domain.Repositories
             {
                 // Distinct by using group by
                 return await context.ServiceIndexs.Where(x => !string.IsNullOrWhiteSpace(x.ServiceName))
+                    .OrderByDescending(x => x.ServiceIndexId)
                     .GroupBy(x => new { x.ServiceName, x.ServicePrice })
                     .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
                     .Take(limit)

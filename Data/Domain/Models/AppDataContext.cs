@@ -39,7 +39,7 @@ namespace Data.Domain.Models
                 entity.Property(m => m.NormalizedUserName).HasMaxLength(127);
                 entity.Property(m => m.UserName).HasMaxLength(127);
             });
-            modelBuilder.Entity<IdentityRole>(entity => {
+            modelBuilder.Entity<UserRole>(entity => {
                 entity.Property(m => m.Name).HasMaxLength(127);
                 entity.Property(m => m.NormalizedName).HasMaxLength(127);
             });
@@ -80,9 +80,6 @@ namespace Data.Domain.Models
                 .HasOne(z => z.Quote)
                 .WithMany(z => z.Services);
 
-
-            modelBuilder.Entity<ServiceIndex>()
-                .HasKey(z => z.ServiceName);
 
             // use data annotation
             //modelBuilder.Entity<ServiceIndex>()

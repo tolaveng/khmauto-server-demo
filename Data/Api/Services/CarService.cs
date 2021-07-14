@@ -68,8 +68,10 @@ namespace Data.Services
         {
             if (string.IsNullOrWhiteSpace(car.CarNo))
                 throw new ArgumentException("Car No is empty");
-            
-           var update = await _repository.GetByCarNo(car.CarNo);
+
+            car.CarNo = car.CarNo.Replace("-", "").Replace(" ", "").Trim();
+
+            var update = await _repository.GetByCarNo(car.CarNo);
            if (update == null)
             {
                 var insert = _mapper.Map<Car>(car);
