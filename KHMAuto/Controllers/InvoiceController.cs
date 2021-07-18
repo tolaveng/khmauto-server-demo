@@ -140,7 +140,7 @@ namespace KHMAuto.Controllers
                 return BadRequest("Invalid To Date");
             }
 
-            var response = await _serviceService.GetSummaryReport(pageQuery, fromDate, toDate, filter.SortBy, filter.SortDir);
+            var response = await _invoiceService.GetSummaryReport(pageQuery, fromDate, toDate, filter.SortBy, filter.SortDir);
             if (response != null)
             {
                 return Json(response);
@@ -187,7 +187,7 @@ namespace KHMAuto.Controllers
                 return BadRequest("Invalid To Date");
             }
 
-            var response = await _serviceService.GetSummaryReport(pageQuery, fromDate, toDate, "InvoiceNo", "ASC");
+            var response = await _invoiceService.GetSummaryReport(pageQuery, fromDate, toDate, "InvoiceNo", "ASC");
             if (response != null)
             {
                 var fileName = $"KHM_Invoice_{fromDate.ToString("dd-MM-yyyy")}_{toDate.ToString("dd-MM-yyyy")}.xlsx";
@@ -222,9 +222,9 @@ namespace KHMAuto.Controllers
                     rowHeader.Append(CreateCell("Invoice No"));
                     rowHeader.Append(CreateCell("Date"));
                     rowHeader.Append(CreateCell("Services"));
-                    rowHeader.Append(CreateCell("Price"));
-                    rowHeader.Append(CreateCell("Qty"));
-                    rowHeader.Append(CreateCell("Total"));
+                    rowHeader.Append(CreateCell("SubTotal"));
+                    rowHeader.Append(CreateCell("Discount"));
+                    rowHeader.Append(CreateCell("Total(in GST)"));
                     rowHeader.Append(CreateCell("GST"));
                     rowHeader.Append(CreateCell("Total(ex GST)"));
                     sheetData.Append(rowHeader);
@@ -236,12 +236,12 @@ namespace KHMAuto.Controllers
                         Row row = new Row();
                         row.Append(CreateCell(data.InvoiceNo.ToString()));
                         row.Append(CreateCell(data.InvoiceDate));
-                        row.Append(CreateCell(data.ServiceName));
-                        row.Append(CreateCell(data.Price.ToString("0.##"), "number"));
-                        row.Append(CreateCell(data.Qty.ToString(), "number"));
-                        row.Append(CreateCell(CalTotal(data.Price, data.Qty), "number"));
-                        row.Append(CreateCell(CalGst(data.Price, data.Qty, data.Gst), "number"));
-                        row.Append(CreateCell(CalTotalExGst(data.Price, data.Qty, data.Gst), "number"));
+                        row.Append(CreateCell(data.Services));
+                        row.Append(CreateCell(data.SubTotal.ToString("0.##"), "number"));
+                        row.Append(CreateCell(data.Discount.ToString("0.##"), "number"));
+                        row.Append(CreateCell(data.AmountTotal.ToString("0.##"), "number"));
+                        row.Append(CreateCell(data.GstTotal.ToString("0.##"), "number"));
+                        row.Append(CreateCell((data.AmountTotal - data.GstTotal).ToString("0.##"), "number"));
                         sheetData.Append(row);
                     }
 
@@ -282,21 +282,21 @@ namespace KHMAuto.Controllers
             return cell;
         }
 
-        private string CalTotal(decimal price, int qty)
-        {
-            return (price * qty).ToString("0.##");
-        }
+        //private string CalTotal(decimal price, int qty)
+        //{
+        //    return (price * qty).ToString("0.##");
+        //}
 
-        private string CalGst(decimal price, int qty, float gst)
-        {
-            return ((price * qty) / (decimal)(gst + 1)).ToString("0.##");
-        }
+        //private string CalGst(decimal price, int qty, float gst)
+        //{
+        //    return ((price * qty) / (decimal)(gst + 1)).ToString("0.##");
+        //}
 
-        private string CalTotalExGst(decimal price, int qty, float gst)
-        {
-            var calGst = (price * qty) / (decimal)(gst + 1);
-            return ((price * qty) - calGst).ToString("0.##");
-        }
+        //private string CalTotalExGst(decimal price, int qty, float gst)
+        //{
+        //    var calGst = (price * qty) / (decimal)(gst + 1);
+        //    return ((price * qty) - calGst).ToString("0.##");
+        //}
 
 
         [HttpPost("create")]

@@ -17,6 +17,6 @@ namespace Data.Api.Services
         Task Update(ServiceDto service);
         Task<bool> Delete(long id);
 
-        Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null);
+        //Task<PaginationResponse<SummaryReport>> GetSummaryReportEachServices(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null);
     }
 }

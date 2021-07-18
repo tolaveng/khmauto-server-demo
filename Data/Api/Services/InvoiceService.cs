@@ -18,7 +18,6 @@ namespace Data.Api.Services
     {
         private readonly IMapper _mapper;
         private readonly IInvoiceRepository _invoiceRepository;
-        private readonly IServiceRepository _serviceRepository;
         private readonly ICarService _carService;
         private readonly ITransactionRepository _transactionRepository;
         private readonly IServiceIndexRepository _serviceIndexRepository;
@@ -31,7 +30,6 @@ namespace Data.Api.Services
             IMapper mapper)
         {
             _invoiceRepository = invoiceRepository;
-            _serviceRepository = serviceRepository;
             _carService = carService;
             _transactionRepository = transactionRepository;
             _mapper = mapper;
@@ -190,6 +188,34 @@ namespace Data.Api.Services
                 }
                 await transaction.CommitAsync();
             }
+        }
+
+        public async Task<PaginationResponse<SummaryReport>> GetSummaryReport(PaginationQuery pagination, DateTime fromDate, DateTime toDate, string sortBy = null, string sortDir = null)
+        {
+            var queryable = _invoiceRepository.GetQueryable().Include(x => x.Services)
+                .Where(x => !x.Archived && x.PaymentMethod != Enums.PaymentMethod.Unpaid
+                && x.InvoiceDate >= fromDate && x.InvoiceDate <= toDate);
+
+            if (!string.IsNullOrWhiteSpace(sortBy) && sortBy.Equals("InvoiceNo", StringComparison.OrdinalIgnoreCase))
+            {
+                queryable = sortDir == "ASC" ? queryable.OrderBy(x => x.InvoiceNo)
+                    : queryable.OrderByDescending(x => x.InvoiceNo);
+            }
+
+            if (!string.IsNullOrWhiteSpace(sortBy) && sortBy.Equals("InvoiceDate", StringComparison.OrdinalIgnoreCase))
+            {
+                queryable = sortDir == "ASC" ? queryable.OrderBy(x => x.InvoiceDate)
+                    : queryable.OrderByDescending(x => x.InvoiceDate);
+            }
+
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            var totalCount = await queryable.CountAsync();
+            var invoices = await queryable.Skip(skip).Take(pagination.PageSize).ToListAsync();
+            var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
+
+            var data = invoices.Select(SummaryReport.FromInvoice);
+
+            return new PaginationResponse<SummaryReport>(data, totalCount, hasNext, pagination);
         }
     }
 }
