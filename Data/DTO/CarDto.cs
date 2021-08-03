@@ -13,6 +13,8 @@ namespace Data.DTO
 
         public long ODO { get; set; }
 
+        public string Color { get; set; }
+
         public CarDto() { }
     }
 }

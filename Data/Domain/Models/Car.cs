@@ -16,6 +16,7 @@ namespace Data.Domain.Models
         public string CarMake { get; set; }
         public int CarYear { get; set; }
         public long ODO { get; set; }
+        public string Color { get; set; }
 
 
         public virtual ICollection<Invoice> Invoices { get; set; }

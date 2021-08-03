@@ -224,9 +224,9 @@ namespace KHMAuto.Controllers
                     rowHeader.Append(CreateCell("Services"));
                     rowHeader.Append(CreateCell("SubTotal"));
                     rowHeader.Append(CreateCell("Discount"));
-                    rowHeader.Append(CreateCell("Total(in GST)"));
-                    rowHeader.Append(CreateCell("GST"));
                     rowHeader.Append(CreateCell("Total(ex GST)"));
+                    rowHeader.Append(CreateCell("GST"));
+                    rowHeader.Append(CreateCell("Total(in GST)"));
                     sheetData.Append(rowHeader);
 
 
@@ -241,7 +241,7 @@ namespace KHMAuto.Controllers
                         row.Append(CreateCell(data.Discount.ToString("0.##"), "number"));
                         row.Append(CreateCell(data.AmountTotal.ToString("0.##"), "number"));
                         row.Append(CreateCell(data.GstTotal.ToString("0.##"), "number"));
-                        row.Append(CreateCell((data.AmountTotal - data.GstTotal).ToString("0.##"), "number"));
+                        row.Append(CreateCell((data.AmountTotal + data.GstTotal).ToString("0.##"), "number"));
                         sheetData.Append(row);
                     }
 
