@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -51,11 +52,45 @@ namespace Data.Domain.Repositories
         public async Task<IEnumerable<ServiceIndex>> FindByServiceName(string serviceName, int limit)
         {
             return await context.ServiceIndexs
-                .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
-                .GroupBy(x => new { x.ServiceName, x.ServicePrice })
-                .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
-                .Take(limit)
-                .ToListAsync();
+                    .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
+                    .GroupBy(x => new { x.ServiceName, x.ServicePrice })
+                    .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
+                    .Take(limit)
+                    .ToListAsync();
+
+            //var serviceNames = serviceName.Split("\n");
+            //if (serviceNames.Length == 1)
+            //{
+            //return await context.ServiceIndexs
+            //    .Where(z => z.ServiceName.Contains(serviceNames[0].Trim(), StringComparison.OrdinalIgnoreCase))
+            //    .GroupBy(x => new { x.ServiceName, x.ServicePrice })
+            //    .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
+            //    .Take(limit)
+            //    .ToListAsync();
+            //}
+
+            //Expression<Func<ServiceIndex, bool>> predicate = ser =>
+            //    ser.ServiceName.Contains(serviceNames[0].Trim(), StringComparison.OrdinalIgnoreCase);
+
+            //for(var i = 1; i < serviceNames.Length; i++)
+            //{
+            //    if (string.IsNullOrWhiteSpace(serviceNames[i])) continue;
+            //    var index = i;
+            //    Expression<Func<ServiceIndex, bool>> exp = ser =>
+            //      (ser.ServiceName.Contains(serviceNames[index].Trim(), StringComparison.OrdinalIgnoreCase));
+
+            //    var invokedExpr = Expression.Invoke(exp, predicate.Parameters.Cast<Expression>());
+            //    predicate = Expression.Lambda<Func<ServiceIndex, bool>>(
+            //        Expression.OrElse(predicate.Body, invokedExpr), predicate.Parameters);
+            //}
+
+            //var query = context.ServiceIndexs.Where(predicate);
+            //var result = await query.GroupBy(x => new { x.ServiceName, x.ServicePrice })
+            //        .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
+            //        .Take(limit)
+            //        .ToListAsync();
+
+            //return result;
         }
 
         public async Task<ServiceIndex> GetService(string serviceName)

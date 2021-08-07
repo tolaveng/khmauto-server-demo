@@ -157,10 +157,11 @@ namespace KHMAuto
 
 
             // Data
-            services.AddDbContextPool<AppDataContext>(options =>
-            //  options.UseNpgsql(Configuration.GetConnectionString("PostgresDd"))
-                options.UseMySQL(Configuration.GetConnectionString("MariaDb"))
-
+            services.AddDbContextPool<AppDataContext>(options => {
+                //  options.UseNpgsql(Configuration.GetConnectionString("PostgresDd"));
+                options.UseMySQL(Configuration.GetConnectionString("MariaDb"));
+                //options.EnableSensitiveDataLogging(true);
+                }
             );
             services.AddAutoMapper(typeof(AutoMapperProfile));
 
