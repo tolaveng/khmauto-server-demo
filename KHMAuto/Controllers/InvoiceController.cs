@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Data.Api.Common;
 using Data.Api.Services;
@@ -12,7 +11,6 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using KHMAuto.Requests;
 using KHMAuto.Responses;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KHMAuto.Controllers
@@ -22,16 +20,14 @@ namespace KHMAuto.Controllers
     public class InvoiceController : Controller
     {
         private readonly IInvoiceService _invoiceService;
-        private readonly IServiceService _serviceService;
         private readonly IServiceIndexService _serviceIndexService;
         private readonly IQuoteService _quoteService;
 
-        public InvoiceController(IInvoiceService invoiceService, IServiceService serviceService,
+        public InvoiceController(IInvoiceService invoiceService,
             IServiceIndexService serviceIndexService,
             IQuoteService quoteService)
         {
             _invoiceService = invoiceService;
-            _serviceService = serviceService;
             _serviceIndexService = serviceIndexService;
             _quoteService = quoteService;
         }
@@ -144,6 +140,74 @@ namespace KHMAuto.Controllers
             if (response != null)
             {
                 return Json(response);
+            }
+            return Ok();
+        }
+
+
+        [HttpGet("getSummaryReportTotal")]
+        public async Task<ActionResult> GetSummaryReportTotal([FromQuery] SummaryReportFilter filter = null)
+        {
+            var pageQuery = new PaginationQuery()
+            {
+                PageNumber = 1,
+                PageSize = int.MaxValue
+            };
+
+            if (filter == null)
+            {
+                return NoContent();
+            }
+
+            if (DateTime.TryParse(filter.FromDate, out var fromDate))
+            {
+                if (fromDate.Kind == DateTimeKind.Utc)
+                {
+                    fromDate = fromDate.ToLocalTime().Date;
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid From Date");
+            }
+
+            if (DateTime.TryParse(filter.ToDate, out var toDate))
+            {
+                if (toDate.Kind == DateTimeKind.Utc)
+                {
+                    toDate = toDate.ToLocalTime().Date;
+                }
+            }
+            else
+            {
+                return BadRequest("Invalid To Date");
+            }
+
+            var response = await _invoiceService.GetSummaryReport(pageQuery, fromDate, toDate, filter.SortBy, filter.SortDir);
+            if (response != null)
+            {
+                var sumSubTotal = 0m;
+                var sumDiscount = 0m;
+                var sumAmountTotal = 0m;
+                var sumGstTotal = 0m;
+                var sumAmountGstTotal = 0m;
+
+                foreach( var item in response.Data)
+                {
+                    sumSubTotal += item.SubTotal;
+                    sumDiscount += item.Discount;
+                    sumAmountTotal += item.AmountTotal;
+                    sumGstTotal += item.GstTotal;
+                    sumAmountGstTotal += (item.AmountTotal + item.GstTotal);
+                }
+
+                return Json(new {
+                    sumSubTotal = sumSubTotal,
+                    sumDiscount = sumDiscount,
+                    sumAmountTotal = sumAmountTotal,
+                    sumGstTotal = sumGstTotal,
+                    sumAmountGstTotal = sumAmountGstTotal
+                });
             }
             return Ok();
         }
