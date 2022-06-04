@@ -20,9 +20,9 @@ namespace Data.DTO
         {
             var serviceNames = string.Join("\n", invoice.Services.Select(ser => ser.ServiceName));
             var subTotal = invoice.Services.Sum(ser => ser.ServicePrice * ser.ServiceQty);
-            var totalAmount = subTotal - invoice.Discount;  // exclude gst
+            var totalAmount = subTotal - invoice.Discount;  // include gst
             var invoiceGst = invoice.Gst > 0 ? (decimal)invoice.Gst : 10m;
-            var gstTotal = Math.Round(totalAmount * invoiceGst / 100, 2);
+            var gstTotal = Math.Round(totalAmount / (invoiceGst + 1), 2);
 
             return new SummaryReport()
             {

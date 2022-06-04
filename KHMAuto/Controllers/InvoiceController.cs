@@ -190,23 +190,23 @@ namespace KHMAuto.Controllers
                 var sumDiscount = 0m;
                 var sumAmountTotal = 0m;
                 var sumGstTotal = 0m;
-                var sumAmountGstTotal = 0m;
+                var sumAmountExclGstTotal = 0m;
 
                 foreach( var item in response.Data)
                 {
                     sumSubTotal += item.SubTotal;
                     sumDiscount += item.Discount;
-                    sumAmountTotal += item.AmountTotal;
+                    sumAmountExclGstTotal += (item.AmountTotal - item.GstTotal);
                     sumGstTotal += item.GstTotal;
-                    sumAmountGstTotal += (item.AmountTotal + item.GstTotal);
+                    sumAmountTotal += item.AmountTotal;
                 }
 
                 return Json(new {
                     sumSubTotal = sumSubTotal,
                     sumDiscount = sumDiscount,
-                    sumAmountTotal = sumAmountTotal,
+                    sumAmountExclGstTotal = sumAmountExclGstTotal,
                     sumGstTotal = sumGstTotal,
-                    sumAmountGstTotal = sumAmountGstTotal
+                    sumAmountTotal = sumAmountTotal,
                 });
             }
             return Ok();
@@ -303,9 +303,9 @@ namespace KHMAuto.Controllers
                         row.Append(CreateCell(data.Services));
                         row.Append(CreateCell(data.SubTotal.ToString("0.##"), "number"));
                         row.Append(CreateCell(data.Discount.ToString("0.##"), "number"));
-                        row.Append(CreateCell(data.AmountTotal.ToString("0.##"), "number"));
+                        row.Append(CreateCell((data.AmountTotal - data.GstTotal).ToString("0.##"), "number"));
                         row.Append(CreateCell(data.GstTotal.ToString("0.##"), "number"));
-                        row.Append(CreateCell((data.AmountTotal + data.GstTotal).ToString("0.##"), "number"));
+                        row.Append(CreateCell(data.AmountTotal.ToString("0.##"), "number"));
                         sheetData.Append(row);
                     }
 
