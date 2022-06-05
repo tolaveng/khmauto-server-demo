@@ -9,5 +9,8 @@ namespace Data.BackgrooundServices
     {
         void StartBackupDatabase(string jobId);
         void StopBackupDatabase(string jobId);
+
+        void StartRestoreDatabase(string jobId, string selectedFileName);
+        void StopRestoreDatabase(string jobId);
     }
 }

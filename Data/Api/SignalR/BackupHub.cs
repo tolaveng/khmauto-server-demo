@@ -34,7 +34,15 @@ namespace Data.Api.SignalR
            _backupJob.StopBackupDatabase(jobId);
         }
 
-        
+        public void StartRestoreJob(string jobId, string selectedFileName)
+        {
+            _backupJob.StartRestoreDatabase(jobId, selectedFileName);
+        }
+
+        public void StopRestoreJob(string jobId)
+        {
+            _backupJob.StopRestoreDatabase(jobId);
+        }
 
         public override async Task OnConnectedAsync()
         {
