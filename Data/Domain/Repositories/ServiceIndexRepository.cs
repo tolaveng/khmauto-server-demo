@@ -1,12 +1,10 @@
-﻿using Data.Domain.Models;
+﻿using Data.Api.Common;
+using Data.Domain.Models;
 using Data.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Data.Domain.Repositories
@@ -53,6 +51,7 @@ namespace Data.Domain.Repositories
         {
             return await context.ServiceIndexs
                     .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(z => z.ServiceIndexId).ThenBy(z => z.ServiceName)
                     .GroupBy(x => new { x.ServiceName, x.ServicePrice })
                     .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
                     .Take(limit)
@@ -104,7 +103,7 @@ namespace Data.Domain.Repositories
             {
                 // Distinct by using group by
                 return await context.ServiceIndexs.Where(x => !string.IsNullOrWhiteSpace(x.ServiceName))
-                    .OrderByDescending(x => x.ServiceIndexId)
+                    .OrderByDescending(z => z.ServiceIndexId).ThenBy(z => z.ServiceName)
                     .GroupBy(x => new { x.ServiceName, x.ServicePrice })
                     .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
                     .Take(limit)
@@ -114,6 +113,34 @@ namespace Data.Domain.Repositories
             {
                 return new List<ServiceIndex>();
             }
+        }
+
+        public async Task UpdateService(int id, string serviceName)
+        {
+            var service = await context.ServiceIndexs.SingleOrDefaultAsync(z => z.ServiceIndexId == id);
+            if (service == null) return;
+            var serviceHash = serviceName.Trim().CleanWhiteSpace().GetShaHash();
+            service.ServiceName = serviceName;
+            service.ServiceIndexHash = serviceHash;
+            await context.SaveChangesAsync();
+        }
+
+        public async Task DeleteService(int id)
+        {
+            var service = await context.ServiceIndexs.SingleOrDefaultAsync(z => z.ServiceIndexId == id);
+            if (service == null) return;
+            context.ServiceIndexs.Remove(service);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<ServiceIndex>> FindByServiceNamePaged(string serviceName, PaginationQuery pagination)
+        {
+            var skip = (pagination.PageNumber - 1) * pagination.PageSize;
+            return await context.ServiceIndexs
+                    .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
+                    .OrderByDescending(z => z.ServiceIndexId).ThenBy(z => z.ServiceName)
+                    .Skip(skip).Take(pagination.PageSize)
+                    .ToListAsync();
         }
     }
 }
