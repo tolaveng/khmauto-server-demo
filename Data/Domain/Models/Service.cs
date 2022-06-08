@@ -20,6 +20,9 @@ namespace Data.Domain.Models
         public long? QuoteId { get; set; }
         public virtual Quote Quote { get; set; }
 
+        [Column(TypeName = "decimal(8, 2)")]
+        public decimal ServicePriceOld { get; set; }
+
         public Service() { }
     }
 }
