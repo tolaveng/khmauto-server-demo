@@ -36,7 +36,7 @@ namespace Data.Api.Services
         public async Task<PaginationResponse<ServiceIndexDto>> FindByServiceNamePaged(string serviceName, PaginationQuery pagination)
         {
             var results = await _repository.FindByServiceNamePaged(serviceName, pagination);
-            var totalCount = results.Count();
+            var totalCount = await _repository.CountByServiceName(serviceName);
             var data = _mapper.Map<List<ServiceIndexDto>>(results);
             var hasNext = (pagination.PageNumber * pagination.PageSize) < totalCount;
             return new PaginationResponse<ServiceIndexDto>(data, totalCount, hasNext, pagination);

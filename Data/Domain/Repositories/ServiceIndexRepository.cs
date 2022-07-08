@@ -51,7 +51,7 @@ namespace Data.Domain.Repositories
         {
             return await context.ServiceIndexs
                     .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
-                    .OrderByDescending(z => z.ServiceIndexId).ThenBy(z => z.ServiceName)
+                    .OrderBy(z => z.ServiceName)
                     .GroupBy(x => new { x.ServiceName, x.ServicePrice })
                     .Select(g => new ServiceIndex() { ServiceName = g.Key.ServiceName, ServicePrice = g.Key.ServicePrice })
                     .Take(limit)
@@ -138,9 +138,16 @@ namespace Data.Domain.Repositories
             var skip = (pagination.PageNumber - 1) * pagination.PageSize;
             return await context.ServiceIndexs
                     .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
-                    .OrderByDescending(z => z.ServiceIndexId).ThenBy(z => z.ServiceName)
+                    .OrderBy(z => z.ServiceName)
                     .Skip(skip).Take(pagination.PageSize)
                     .ToListAsync();
+        }
+
+        public async Task<int> CountByServiceName(string serviceName)
+        {
+            return await context.ServiceIndexs
+                    .Where(z => z.ServiceName.Contains(serviceName.Trim(), StringComparison.OrdinalIgnoreCase))
+                    .CountAsync();
         }
     }
 }
